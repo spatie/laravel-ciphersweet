@@ -3,6 +3,7 @@
 namespace Spatie\LaravelCipherSweet;
 
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
@@ -69,21 +70,38 @@ trait UsesCipherSweet
 
     public function scopeWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder
     {
-        return $query->whereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
+        $joins = collect($query->getQuery()->joins)->filter(fn (JoinClause $join) => $join->table === 'blind_indexes');
+        $query
+            ->select($this->getTable().'.*')
+            ->when($joins->count() === 0, function (Builder $query) {
+                $query->join('blind_indexes', function (Builder $query) {
+                    $query->where('indexable_type', $this->getMorphClass());
+                    $query->where('indexable_id', DB::raw($this->getTable().'.'.$this->getKeyName()));
+                });
+            })
+            ->where('blind_indexes.name', $indexName)
+            ->where('blind_indexes.value', static::$cipherSweetEncryptedRow->getBlindIndex($indexName, [$column => $value]));
+
+        return $query;
     }
 
     public function scopeOrWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder
     {
-        return $query->orWhereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
-    }
+        $joins = collect($query->getQuery()->joins)->filter(fn (JoinClause $join) => $join->table === 'blind_indexes');
+        $query
+            ->select($this->getTable().'.*')
+            ->when($joins->count() === 0, function (Builder $query) {
+                $query->join('blind_indexes', function (Builder $query) {
+                    $query->where('indexable_type', $this->getMorphClass());
+                    $query->where('indexable_id', DB::raw($this->getTable().'.'.$this->getKeyName()));
+                });
+            })
+            ->orWhere(function (Builder $query) use ($value, $column, $indexName) {
+                $query
+                    ->where('blind_indexes.name', $indexName)
+                    ->where('blind_indexes.value', static::$cipherSweetEncryptedRow->getBlindIndex($indexName, [$column => $value]));
+            });
 
-    private function buildBlindQuery(Builder $query, string $column, string $indexName, string|array $value): Builder
-    {
-        return $query->select(DB::raw(1))
-            ->from('blind_indexes')
-            ->where('indexable_type', $this->getMorphClass())
-            ->where('indexable_id', DB::raw($this->getTable() . '.' . $this->getKeyName()))
-            ->where('name', $indexName)
-            ->where('value', static::$cipherSweetEncryptedRow->getBlindIndex($indexName, [$column => $value]));
+        return $query;
     }
 }
