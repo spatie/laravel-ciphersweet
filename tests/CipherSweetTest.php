@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
