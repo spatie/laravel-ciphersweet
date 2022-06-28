@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "spatie/laravel-ciphersweet",
+    "description": "Use ciphersweet in your Laravel project",
     "keywords": [
-        ":vendor_name",
+        "spatie",
         "laravel",
-        ":package_slug"
+        "laravel-ciphersweet"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/spatie/laravel-ciphersweet",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Rias Van der Veken",
+            "email": "rias@spatie.be",
             "role": "Developer"
         }
     ],
@@ -35,13 +35,13 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories"
+            "Spatie\\LaravelCiphersweet\\": "src",
+            "Spatie\\LaravelCiphersweet\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Spatie\\LaravelCiphersweet\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -51,15 +51,19 @@
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Spatie\\LaravelCiphersweet\\LaravelCiphersweetServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelCiphersweet": "Spatie\\LaravelCiphersweet\\Facades\\LaravelCiphersweet"
             }
         }
     },
