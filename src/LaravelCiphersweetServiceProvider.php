@@ -2,24 +2,52 @@
 
 namespace Spatie\LaravelCipherSweet;
 
+use ParagonIE\CipherSweet\Backend\BoringCrypto;
+use ParagonIE\CipherSweet\Backend\FIPSCrypto;
+use ParagonIE\CipherSweet\Backend\ModernCrypto;
+use ParagonIE\CipherSweet\CipherSweet;
+use ParagonIE\CipherSweet\Contract\BackendInterface;
+use ParagonIE\CipherSweet\Contract\KeyProviderInterface;
+use ParagonIE\CipherSweet\KeyProvider\FileProvider;
+use ParagonIE\CipherSweet\KeyProvider\RandomProvider;
+use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\LaravelCipherSweet\Commands\LaravelCipherSweetCommand;
 
 class LaravelCipherSweetServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        /*
-         * This class is a Package Service Provider
-         *
-         * More info: https://github.com/spatie/laravel-package-tools
-         */
         $package
             ->name('laravel-ciphersweet')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel-ciphersweet_table')
-            ->hasCommand(LaravelCipherSweetCommand::class);
+            ->hasMigration('create_blind_indexes_table');
+    }
+
+    public function packageRegistered()
+    {
+        $this->app->singleton(CipherSweet::class, function () {
+            $backend = $this->buildBackend();
+
+            return new CipherSweet($this->buildKeyProvider($backend), $backend);
+        });
+    }
+
+    protected function buildBackend(): BackendInterface
+    {
+        return match (config('ciphersweet.encryption.backend')) {
+            'fips' => new FIPSCrypto(),
+            'boring' => new BoringCrypto(),
+            default => new ModernCrypto(),
+        };
+    }
+
+    protected function buildKeyProvider(BackendInterface $backend): KeyProviderInterface
+    {
+        return match (config('ciphersweet.provider')) {
+            'file' => new FileProvider(config('ciphersweet.providers.file.path')),
+            'string' => new StringProvider(config('ciphersweet.providers.string.key')),
+            default => new RandomProvider($backend),
+        };
     }
 }
