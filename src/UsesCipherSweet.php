@@ -3,7 +3,6 @@
 namespace Spatie\LaravelCipherSweet;
 
 use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
