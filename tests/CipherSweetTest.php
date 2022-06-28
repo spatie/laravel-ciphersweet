@@ -38,4 +38,6 @@ it('can scope on blind indexes', function () {
     expect(User::whereBlind('email', 'email_index', 'rias@spatie.be')->count())->toBe(1);
     expect(User::whereBlind('email', 'email_index', 'rias@spatie.be')->first()->is($this->user))->toBeTrue();
     expect(User::whereBlind('email', 'email_index', 'rias@spatie.be')->first()->is($otherUser))->toBeFalse();
+
+    expect(User::whereBlind('email', 'email_index', 'rias@spatie.be')->orWhereBlind('email', 'email_index', 'foo@bar.com')->count())->toBe(2);
 });
