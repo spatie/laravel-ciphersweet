@@ -2,9 +2,9 @@
 
 namespace Spatie\LaravelCiphersweet;
 
+use Spatie\LaravelCiphersweet\Commands\LaravelCiphersweetCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Spatie\LaravelCiphersweet\Commands\LaravelCiphersweetCommand;
 
 class LaravelCiphersweetServiceProvider extends PackageServiceProvider
 {
