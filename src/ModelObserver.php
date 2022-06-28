@@ -26,7 +26,11 @@ class ModelObserver
      */
     public function retrieved(Model $model)
     {
-        $model->decryptRow();
+        try {
+            $model->decryptRow();
+        } catch (\ErrorException $e) {
+            // Not all fields are available to decrypt.
+        }
     }
 
     /**
