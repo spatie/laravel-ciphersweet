@@ -64,7 +64,7 @@ trait UsesCipherSweet
 
     public function scopeWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder
     {
-        return $query->orWhereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
+        return $query->whereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
     }
 
     public function scopeOrWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder
