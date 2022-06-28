@@ -12,6 +12,11 @@ trait UsesCipherSweet
 {
     public static EncryptedRow $cipherSweetEncryptedRow;
 
+    public static function getCipherSweetConfig(): EncryptedRow
+    {
+        return static::$cipherSweetEncryptedRow;
+    }
+
     protected static function bootUsesCipherSweet()
     {
         static::observe(ModelObserver::class);
@@ -24,7 +29,7 @@ trait UsesCipherSweet
         static::configureCipherSweet(static::$cipherSweetEncryptedRow);
     }
 
-    abstract protected static function configureCipherSweet(EncryptedRow $encryptedRow): void;
+    abstract public static function configureCipherSweet(EncryptedRow $encryptedRow): void;
 
     /**
      * @return void

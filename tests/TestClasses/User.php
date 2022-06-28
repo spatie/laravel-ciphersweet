@@ -13,7 +13,7 @@ class User extends Model
 
     protected $guarded = [];
 
-    protected static function configureCipherSweet(EncryptedRow $encryptedRow): void
+    public static function configureCipherSweet(EncryptedRow $encryptedRow): void
     {
         $encryptedRow->addField('email')
             ->addBlindIndex('email', new BlindIndex('email_index'));

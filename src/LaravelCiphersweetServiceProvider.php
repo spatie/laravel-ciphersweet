@@ -21,7 +21,8 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-ciphersweet')
             ->hasConfigFile()
-            ->hasMigration('create_blind_indexes_table');
+            ->hasMigration('create_blind_indexes_table')
+            ->hasCommand(RotateModelEncryptionCommand::class);
     }
 
     public function packageRegistered()

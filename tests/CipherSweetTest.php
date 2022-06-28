@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
 beforeEach(function () {
@@ -40,4 +42,22 @@ it('can scope on blind indexes', function () {
     expect(User::whereBlind('email', 'email_index', 'rias@spatie.be')->first()->is($otherUser))->toBeFalse();
 
     expect(User::whereBlind('email', 'email_index', 'rias@spatie.be')->orWhereBlind('email', 'email_index', 'foo@bar.com')->count())->toBe(2);
+});
+
+it('can rotate keys', function () {
+    $originalUser = DB::table('users')->first();
+
+    $this->artisan('ciphersweet:rotate-model-encryption', [
+        'model' => User::class,
+        'newKey' => $key = Hex::encode(random_bytes(32)),
+    ])->assertSuccessful()->expectsOutput('Updated 1 rows.');
+
+    $updatedUser = DB::table('users')->first();
+
+    expect($originalUser?->email)->not()->toBe($updatedUser?->email);
+
+    $this->artisan('ciphersweet:rotate-model-encryption', [
+        'model' => User::class,
+        'newKey' => $key,
+    ])->assertSuccessful()->expectsOutput('Updated 0 rows.');
 });
