@@ -1,5 +1,5 @@
 <?php
-// config for Spatie/LaravelCiphersweet
+// config for Spatie/LaravelCipherSweet
 return [
 
 ];

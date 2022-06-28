@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\LaravelCiphersweet\Commands;
+namespace Spatie\LaravelCipherSweet\Commands;
 
 use Illuminate\Console\Command;
 
-class LaravelCiphersweetCommand extends Command
+class LaravelCipherSweetCommand extends Command
 {
     public $signature = 'laravel-ciphersweet';
 

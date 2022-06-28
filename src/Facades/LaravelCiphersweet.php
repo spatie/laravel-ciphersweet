@@ -1,13 +1,13 @@
 <?php
 
-namespace Spatie\LaravelCiphersweet\Facades;
+namespace Spatie\LaravelCipherSweet\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Spatie\LaravelCiphersweet\LaravelCiphersweet
+ * @see \Spatie\LaravelCipherSweet\LaravelCipherSweet
  */
-class LaravelCiphersweet extends Facade
+class LaravelCipherSweet extends Facade
 {
     protected static function getFacadeAccessor()
     {

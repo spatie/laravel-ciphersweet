@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\LaravelCiphersweet\Database\Factories;
+namespace Spatie\LaravelCipherSweet\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

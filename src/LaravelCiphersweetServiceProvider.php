@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\LaravelCiphersweet;
+namespace Spatie\LaravelCipherSweet;
 
-use Spatie\LaravelCiphersweet\Commands\LaravelCiphersweetCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Spatie\LaravelCipherSweet\Commands\LaravelCipherSweetCommand;
 
-class LaravelCiphersweetServiceProvider extends PackageServiceProvider
+class LaravelCipherSweetServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -20,6 +20,6 @@ class LaravelCiphersweetServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasViews()
             ->hasMigration('create_laravel-ciphersweet_table')
-            ->hasCommand(LaravelCiphersweetCommand::class);
+            ->hasCommand(LaravelCipherSweetCommand::class);
     }
 }

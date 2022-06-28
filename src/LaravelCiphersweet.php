@@ -1,7 +1,7 @@
 <?php
 
-namespace Spatie\LaravelCiphersweet;
+namespace Spatie\LaravelCipherSweet;
 
-class LaravelCiphersweet
+class LaravelCipherSweet
 {
 }

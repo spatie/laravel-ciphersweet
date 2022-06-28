@@ -55,8 +55,8 @@ php artisan vendor:publish --tag="laravel-ciphersweet-views"
 ## Usage
 
 ```php
-$laravelCiphersweet = new Spatie\LaravelCiphersweet();
-echo $laravelCiphersweet->echoPhrase('Hello, Spatie!');
+$LaravelCipherSweet = new Spatie\LaravelCipherSweet();
+echo $LaravelCipherSweet->echoPhrase('Hello, Spatie!');
 ```
 
 ## Testing

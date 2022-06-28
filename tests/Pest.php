@@ -1,5 +1,5 @@
 <?php
 
-use Spatie\LaravelCiphersweet\Tests\TestCase;
+use Spatie\LaravelCipherSweet\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
