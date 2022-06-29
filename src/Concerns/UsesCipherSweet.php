@@ -1,21 +1,17 @@
 <?php
 
-namespace Spatie\LaravelCipherSweet;
+namespace Spatie\LaravelCipherSweet\Concerns;
 
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
+use Spatie\LaravelCipherSweet\Observers\ModelObserver;
 
 /** @mixin \Illuminate\Database\Eloquent\Model */
 trait UsesCipherSweet
 {
     public static EncryptedRow $cipherSweetEncryptedRow;
-
-    public static function getCipherSweetConfig(): EncryptedRow
-    {
-        return static::$cipherSweetEncryptedRow;
-    }
 
     protected static function bootUsesCipherSweet()
     {

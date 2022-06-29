@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\LaravelCipherSweet;
+namespace Spatie\LaravelCipherSweet\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
@@ -20,7 +20,7 @@ class RotateModelEncryptionCommand extends Command
     {
         $this->info('Rotating encryption keys for all models');
 
-        /** @var class-string<\Spatie\LaravelCipherSweet\UsesCipherSweet> $modelClass */
+        /** @var class-string<\Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted> $modelClass */
         $modelClass = $this->argument('model');
 
         if (! class_exists($modelClass)) {
@@ -34,10 +34,11 @@ class RotateModelEncryptionCommand extends Command
         DB::table($newClass->getTable())->orderBy((new $modelClass())->getKeyName())->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
             $model = (array) $model;
 
-            /** @var EncryptedRow $oldRow */
-            $oldRow = $modelClass::getCipherSweetConfig();
+            $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $newClass->getTable());
+            $modelClass::configureCipherSweet($oldRow);
+
             $newRow = new EncryptedRow(
-                new CipherSweetEngine(new StringProvider($this->argument('newKey'))),
+                new CipherSweetEngine(new StringProvider($this->argument('newKey')), $oldRow->getBackend()),
                 $newClass->getTable(),
             );
             $modelClass::configureCipherSweet($newRow);

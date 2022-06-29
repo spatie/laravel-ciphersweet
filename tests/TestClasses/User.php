@@ -5,9 +5,10 @@ namespace Spatie\LaravelCipherSweet\Tests\TestClasses;
 use Illuminate\Database\Eloquent\Model;
 use ParagonIE\CipherSweet\BlindIndex;
 use ParagonIE\CipherSweet\EncryptedRow;
-use Spatie\LaravelCipherSweet\UsesCipherSweet;
+use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
+use Spatie\LaravelCipherSweet\Concerns\UsesCipherSweet;
 
-class User extends Model
+class User extends Model implements CipherSweetEncrypted
 {
     use UsesCipherSweet;
 

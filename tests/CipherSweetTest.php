@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use ParagonIE\CipherSweet\CipherSweet;
+use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
+use ParagonIE\CipherSweet\EncryptedRow;
+use ParagonIE\CipherSweet\Exception\InvalidCiphertextException;
 use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
@@ -59,4 +63,19 @@ it('can rotate keys', function () {
         'model' => User::class,
         'newKey' => $key,
     ])->assertSuccessful()->expectsOutput('Updated 0 rows.');
+
+    try {
+        User::first();
+    } catch (SodiumException $e) {
+        expect($e->getMessage())->toBe('Invalid ciphertext');
+    }
+
+    // Reset static instance of CipherSweetEngine
+    config()->set('ciphersweet.providers.string.key', $key);
+    User::$cipherSweetEncryptedRow = new EncryptedRow(
+        app(CipherSweetEngine::class),
+        (new User())->getTable()
+    );
+
+    User::first(); // Shouldn't throw an exception.
 });

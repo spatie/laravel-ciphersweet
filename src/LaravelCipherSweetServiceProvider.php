@@ -11,6 +11,7 @@ use ParagonIE\CipherSweet\Contract\KeyProviderInterface;
 use ParagonIE\CipherSweet\KeyProvider\FileProvider;
 use ParagonIE\CipherSweet\KeyProvider\RandomProvider;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
+use Spatie\LaravelCipherSweet\Commands\RotateModelEncryptionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
