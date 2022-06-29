@@ -9,7 +9,7 @@ use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 beforeEach(function () {
     $this->user = User::create([
         'name' => 'Rias',
-        'password' => fake()->password,
+        'password' => bcrypt('password'),
         'email' => 'rias@spatie.be',
     ]);
 });
