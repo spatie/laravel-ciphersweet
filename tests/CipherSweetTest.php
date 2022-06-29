@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use ParagonIE\CipherSweet\CipherSweet;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
-use ParagonIE\CipherSweet\Exception\InvalidCiphertextException;
 use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
