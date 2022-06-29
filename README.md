@@ -8,7 +8,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-ciphersweet/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
 
-CipherSweet is a backend library developed by [Paragon Initiative Enterprises](https://paragonie.com/) for implementing [searchable field-level encryption](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql). This is a small Laravel wrapper package around it to improve developer experience.
+[CipherSweet](https://ciphersweet.paragonie.com/) is a backend library developed by [Paragon Initiative Enterprises](https://paragonie.com/) for implementing [searchable field-level encryption](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql). This is a small Laravel wrapper package around it to improve developer experience.
 
 ## Support us
 
@@ -65,6 +65,8 @@ class User extends Model implements CipherSweetEncrypted
 ```
 
 The example above will encrypt the `email` field on the `User` model. It also adds a blind index in the `blind_indexes` table which allows you to search on it.
+
+[Check out the CipherSweet PHP docs](https://ciphersweet.paragonie.com/php) for more information on what is possible.
 
 ### Searching on blind indexes
 
