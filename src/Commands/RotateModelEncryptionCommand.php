@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
+use ParagonIE\CipherSweet\Exception\InvalidCiphertextException;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use ParagonIE\CipherSweet\KeyRotation\RowRotator;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
@@ -54,7 +55,11 @@ class RotateModelEncryptionCommand extends Command
 
             $rotator = new RowRotator($oldRow, $newRow);
             if ($rotator->needsReEncrypt($model)) {
-                [$ciphertext, $indices] = $rotator->prepareForUpdate($model);
+                try {
+                    [$ciphertext, $indices] = $rotator->prepareForUpdate($model);
+                } catch (InvalidCiphertextException $e) {
+                    [$ciphertext, $indices] = $newRow->prepareRowForStorage($model);
+                }
 
                 DB::table($newClass->getTable())
                     ->where($newClass->getKeyName(), $model[$newClass->getKeyName()])

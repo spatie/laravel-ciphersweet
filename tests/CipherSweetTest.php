@@ -77,3 +77,40 @@ it('can rotate keys', function () {
 
     User::first(); // Shouldn't throw an exception.
 });
+
+it('can encrypt rows when they werent encrypted', function () {
+    DB::table('users')->update([
+        'email' => 'rias@spatie.be',
+    ]);
+
+    $originalUser = DB::table('users')->first();
+
+    $this->artisan('ciphersweet:rotate-model-encryption', [
+        'model' => User::class,
+        'newKey' => $key = Hex::encode(random_bytes(32)),
+    ])->assertSuccessful()->expectsOutput('Updated 1 rows.');
+
+    $updatedUser = DB::table('users')->first();
+
+    expect($originalUser?->email)->not()->toBe($updatedUser?->email);
+
+    $this->artisan('ciphersweet:rotate-model-encryption', [
+        'model' => User::class,
+        'newKey' => $key,
+    ])->assertSuccessful()->expectsOutput('Updated 0 rows.');
+
+    try {
+        User::first();
+    } catch (SodiumException $e) {
+        expect($e->getMessage())->toBe('Invalid ciphertext');
+    }
+
+    // Reset static instance of CipherSweetEngine
+    config()->set('ciphersweet.providers.string.key', $key);
+    User::$cipherSweetEncryptedRow = new EncryptedRow(
+        app(CipherSweetEngine::class),
+        (new User())->getTable()
+    );
+
+    User::first(); // Shouldn't throw an exception.
+});
