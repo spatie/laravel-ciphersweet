@@ -94,6 +94,8 @@ php artisan ciphersweet:rotate-model-encryption "App\User" <your-new-key>
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
 
+If you have a lot of rows, this process will take a long time. The command can be re-run without needing to re-encrypt already rotated keys.
+
 ## Testing
 
 ```bash

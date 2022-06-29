@@ -9,6 +9,7 @@ use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use ParagonIE\CipherSweet\KeyRotation\RowRotator;
+use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class RotateModelEncryptionCommand extends Command
 {
@@ -18,8 +19,6 @@ class RotateModelEncryptionCommand extends Command
 
     public function handle(): int
     {
-        $this->info('Rotating encryption keys for all models');
-
         /** @var class-string<\Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted> $modelClass */
         $modelClass = $this->argument('model');
 
@@ -30,7 +29,17 @@ class RotateModelEncryptionCommand extends Command
         }
 
         $newClass = (new $modelClass());
+
+        if (! $newClass instanceof CipherSweetEncrypted) {
+            $this->error("Model {$modelClass} does not implement CipherSweetEncrypted");
+
+            return self::INVALID;
+        }
+
         $updatedRows = 0;
+
+        $this->getOutput()->progressStart(DB::table($newClass->getTable())->count());
+
         DB::table($newClass->getTable())->orderBy((new $modelClass())->getKeyName())->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
             $model = (array) $model;
 
@@ -63,7 +72,11 @@ class RotateModelEncryptionCommand extends Command
 
                 $updatedRows++;
             }
+
+            $this->getOutput()->progressAdvance();
         });
+
+        $this->getOutput()->progressFinish();
 
         $this->info("Updated {$updatedRows} rows.");
         $this->info("You can now set your config key to the new key.");
