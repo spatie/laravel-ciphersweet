@@ -12,7 +12,6 @@ use ParagonIE\CipherSweet\KeyProvider\FileProvider;
 use ParagonIE\CipherSweet\KeyProvider\RandomProvider;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
-use Spatie\LaravelCipherSweet\Commands\EncryptModelValues;
 use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
