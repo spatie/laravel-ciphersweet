@@ -14,7 +14,7 @@ To solve this problem, you can encrypt the personal data. This way, unauthorized
 
 [CipherSweet](https://ciphersweet.paragonie.com/) is a backend library developed by [Paragon Initiative Enterprises](https://paragonie.com/) for implementing [searchable field-level encryption](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql). It can encrypt and decrypt values in a very secure way. It is also able to create blind indexes. These indexes can be used to perform searches on encrypted data. The indexes themselves are unreadable by humans.
 
-Our package is a wrapper over CipherSweet, allow you to easily use it with Laravel's Eloquent models.
+Our package is a wrapper over CipherSweet, which allows you to easily use it with Laravel's Eloquent models.
 
 ## Support us
 
