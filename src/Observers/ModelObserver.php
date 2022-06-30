@@ -8,7 +8,7 @@ use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class ModelObserver
 {
-    public function deleting(CipherSweetEncrypted $model)
+    public function deleting(CipherSweetEncrypted $model): void
     {
         DB::table('blind_indexes')
             ->where('indexable_type', $model->getMorphClass())
@@ -16,7 +16,7 @@ class ModelObserver
             ->delete();
     }
 
-    public function retrieved(CipherSweetEncrypted $model)
+    public function retrieved(CipherSweetEncrypted $model): void
     {
         try {
             $model->decryptRow();
