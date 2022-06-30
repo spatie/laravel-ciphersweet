@@ -36,8 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\LaravelCipherSweet\\": "src",
-            "Spatie\\LaravelCipherSweet\\Database\\Factories\\": "database/factories"
+            "Spatie\\LaravelCipherSweet\\": "src"
         }
     },
     "autoload-dev": {
@@ -47,6 +46,7 @@
     },
     "scripts": {
         "analyse": "vendor/bin/phpstan analyse",
+        "baseline": "vendor/bin/phpstan analyse --generate-baseline",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"

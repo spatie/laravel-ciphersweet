@@ -2,6 +2,7 @@
 
 namespace Spatie\LaravelCipherSweet\Observers;
 
+use ErrorException;
 use Illuminate\Support\Facades\DB;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
@@ -19,7 +20,7 @@ class ModelObserver
     {
         try {
             $model->decryptRow();
-        } catch (\ErrorException $e) {
+        } catch (ErrorException) {
             // Not all fields are available to decrypt.
         }
     }
@@ -32,6 +33,7 @@ class ModelObserver
     public function saved(CipherSweetEncrypted $model): void
     {
         $model->decryptRow();
+
         $model->updateBlindIndexes();
     }
 }

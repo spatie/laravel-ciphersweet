@@ -36,6 +36,7 @@ trait UsesCipherSweet
     public function encryptRow(): void
     {
         $fieldsToEncrypt = static::$cipherSweetEncryptedRow->listEncryptedFields();
+
         $attributes = $this->getAttributes();
 
         foreach ($fieldsToEncrypt as $field) {
@@ -63,18 +64,30 @@ trait UsesCipherSweet
         $this->setRawAttributes(static::$cipherSweetEncryptedRow->decryptRow($this->getAttributes()), true);
     }
 
-    public function scopeWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder
-    {
+    public function scopeWhereBlind(
+        Builder $query,
+        string $column,
+        string $indexName,
+        string|array $value
+    ): Builder {
         return $query->whereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
     }
 
-    public function scopeOrWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder
-    {
+    public function scopeOrWhereBlind(
+        Builder $query,
+        string $column,
+        string $indexName,
+        string|array $value
+    ): Builder {
         return $query->orWhereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
     }
 
-    private function buildBlindQuery(Builder $query, string $column, string $indexName, string|array $value): Builder
-    {
+    private function buildBlindQuery(
+        Builder $query,
+        string $column,
+        string $indexName,
+        string|array $value
+    ): Builder {
         return $query->select(DB::raw(1))
             ->from('blind_indexes')
             ->where('indexable_type', $this->getMorphClass())

@@ -16,7 +16,17 @@ interface CipherSweetEncrypted
 
     public function updateBlindIndexes(): void;
 
-    public function scopeWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder;
+    public function scopeWhereBlind(
+        Builder $query,
+        string $column,
+        string $indexName,
+        string|array $value
+    ): Builder;
 
-    public function scopeOrWhereBlind(Builder $query, string $column, string $indexName, string|array $value): Builder;
+    public function scopeOrWhereBlind(
+        Builder $query,
+        string $column,
+        string $indexName,
+        string|array $value
+    ): Builder;
 }

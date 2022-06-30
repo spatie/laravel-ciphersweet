@@ -16,7 +16,8 @@ class User extends Model implements CipherSweetEncrypted
 
     public static function configureCipherSweet(EncryptedRow $encryptedRow): void
     {
-        $encryptedRow->addField('email')
+        $encryptedRow
+            ->addField('email')
             ->addBlindIndex('email', new BlindIndex('email_index'));
     }
 }

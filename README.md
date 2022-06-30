@@ -8,7 +8,13 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-ciphersweet/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
 
-[CipherSweet](https://ciphersweet.paragonie.com/) is a backend library developed by [Paragon Initiative Enterprises](https://paragonie.com/) for implementing [searchable field-level encryption](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql). This is a small Laravel wrapper package around it to improve developer experience.
+In your project, you might store sensitive personal data in your database. Should an unauthorised person get access to your DB, all sensitive can be read which is obviously not good.
+
+To solve this problem, you can encrypt the personal data. This way, unauthorized persons cannot read it, but your application can still decrypt it when you need to display or work with the data.
+
+[CipherSweet](https://ciphersweet.paragonie.com/) is a backend library developed by [Paragon Initiative Enterprises](https://paragonie.com/) for implementing [searchable field-level encryption](https://paragonie.com/blog/2017/05/building-searchable-encrypted-databases-with-php-and-sql). It can encrypt and decrypt values in a very secure way. It is also able to create blind indexes. These indexes can be used to perform searches on encrypted data. The indexes themselves are unreadable by humans.
+
+Our package is a wrapper our CipherSweet, allow you to easily use it with Laravel's Eloquent models.
 
 ## Support us
 
@@ -26,20 +32,65 @@ You can install the package via composer:
 composer require spatie/laravel-ciphersweet
 ```
 
-You can publish and run the migrations with:
+You must publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-ciphersweet-migrations"
+php artisan vendor:publish --tag="ciphersweet-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+Optionally, you can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-ciphersweet-config"
+php artisan vendor:publish --tag="ciphersweet-config"
+```
+
+This is the contents of the config file:
+
+```php
+return [
+    /*
+     * This controls which cryptographic backend will be used by CipherSweet.
+     * Unless you have specific compliance requirements, you should choose
+     * "nacl".
+     *
+     * Supported: "boring", "fips", "nacl"
+     */
+
+    'backend' => env('CIPHERSWEET_BACKEND', 'nacl'),
+
+    /*
+     * Select which key provider your application will use. The default option
+     * is to read a string literal out of .env, but it's also possible to
+     * provide the key in a file or use random keys for testing.
+     *
+     * Supported: "file", "random", "string"
+     */
+
+    'provider' => env('CIPHERSWEET_PROVIDER', 'string'),
+
+    /*
+     * Set provider-specific options here. "string" will read the key directly
+     * from your .env file. "file" will read the contents of the specified file
+     * to use as your key. "custom" points to a factory class that returns a
+     * provider from its `__invoke` method. Please see the docs for more details.
+     */
+    'providers' => [
+        'file' => [
+            'path' => env('CIPHERSWEET_FILE_PATH'),
+        ],
+        'string' => [
+            'key' => env('CIPHERSWEET_KEY'),
+        ],
+    ],
+];
 ```
 
 ## Usage
+
+Few steps are involved to store encrypted values. Let's go through them.
+
+### 1. Preparing your model and choosing the attributes that should be encrypted
 
 Add the `CipherSweetEncrypted` interface and `UsesCipherSweet` trait to the model that you want to add encrypted fields to.
 
@@ -68,7 +119,39 @@ The example above will encrypt the `email` field on the `User` model. It also ad
 
 [Check out the CipherSweet PHP docs](https://ciphersweet.paragonie.com/php) for more information on what is possible.
 
+### 2. Generating the encrypting key
+
+An encryption key is used to encrypt your values.  You can generate a new CipherSweet encrypting key using this command:
+
+```bash
+php artisan ciphersweet:generate-key
+```
+
+### 3. Encrypting model attributes
+
+With this in place, you can run this command to encrypt all values:
+
+```bash
+php artisan ciphersweet:encrypt <YOUR-MODEL-CLASS> <GENERATED-KEY>
+```
+
+The command will update all the encrypted fields and blind indexes of the model.
+
+If you have a lot of rows, this process can take a long time. The command is restartable: it can be re-run without needing to re-encrypt already rotated keys.
+
+### 4. Updating your .env file
+
+After the fields have been encrypted, you should add the generated CipherSweet key to your .env file.
+
+```text
+CIPHERSWEET_KEY=<YOUR-KEY>
+```
+
+The key will be used by your application to read encrypted values.
+
 ### Searching on blind indexes
+
+Even though values are encrypted, you can still search them using a blind index. The blind indexes will have been built up when you ran the command to encrypt the model values.
 
 This package provides a `whereBlind` and `orWhereBlind` scope to search on blind indexes.
 
@@ -80,23 +163,13 @@ $user = User::whereBlind('email', 'email_index', 'rias@spatie.be');
 
 ### Rotating keys
 
-This package provides a `RotateModelEncryptionCommand` to rotate the encryption key.
+Should you suspect that somebody got a hold of your encrypting key, you can re-encrypt the values. Simply generate another encrypting key, and run the `php artisan ciphersweet:encrypt` command again.
 
-You can generate a new key using:
-
-```php
-\ParagonIE\ConstantTime\Hex::encode(random_bytes(32))
-```
-
-Once you have a new key, you can call the command:
-
-```shell
-php artisan ciphersweet:rotate-model-encryption "App\User" <your-new-key>
+```bash
+php artisan ciphersweet:encrypt "App\User" <your-new-key>
 ```
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
-
-If you have a lot of rows, this process will take a long time. The command can be re-run without needing to re-encrypt already rotated keys.
 
 ## Testing
 

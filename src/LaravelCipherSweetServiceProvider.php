@@ -11,7 +11,9 @@ use ParagonIE\CipherSweet\Contract\KeyProviderInterface;
 use ParagonIE\CipherSweet\KeyProvider\FileProvider;
 use ParagonIE\CipherSweet\KeyProvider\RandomProvider;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
-use Spatie\LaravelCipherSweet\Commands\RotateModelEncryptionCommand;
+use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
+use Spatie\LaravelCipherSweet\Commands\EncryptModelValues;
+use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -23,7 +25,7 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
             ->name('laravel-ciphersweet')
             ->hasConfigFile()
             ->hasMigration('create_blind_indexes_table')
-            ->hasCommand(RotateModelEncryptionCommand::class);
+            ->hasCommands(GenerateKeyCommand::class, EncryptCommand::class);
     }
 
     public function packageRegistered()
