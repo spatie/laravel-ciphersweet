@@ -132,7 +132,7 @@ php artisan ciphersweet:generate-key
 With this in place, you can run this command to encrypt all values:
 
 ```bash
-php artisan ciphersweet:encrypt <YOUR-MODEL-CLASS> <GENERATED-KEY>
+php artisan ciphersweet:encrypt <your-model-class> <generated-key>
 ```
 
 The command will update all the encrypted fields and blind indexes of the model.
