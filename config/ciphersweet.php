@@ -8,7 +8,6 @@ return [
      *
      * Supported: "boring", "fips", "nacl"
      */
-
     'backend' => env('CIPHERSWEET_BACKEND', 'nacl'),
 
     /*
@@ -18,7 +17,6 @@ return [
      *
      * Supported: "file", "random", "string"
      */
-
     'provider' => env('CIPHERSWEET_PROVIDER', 'string'),
 
     /*
