@@ -15,7 +15,7 @@ class GenerateKeyCommand extends Command
     {
         $encryptionKey = Hex::encode(random_bytes(32));
 
-        $this->info('Here is the your new encryption key');
+        $this->info('Here is your new encryption key');
         $this->info('');
         $this->info($encryptionKey);
         $this->info('');
