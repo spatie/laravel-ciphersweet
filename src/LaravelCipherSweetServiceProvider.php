@@ -38,7 +38,7 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
 
     protected function buildBackend(): BackendInterface
     {
-        return match (config('ciphersweet.encryption.backend')) {
+        return match (config('ciphersweet.backend')) {
             'fips' => new FIPSCrypto(),
             'boring' => new BoringCrypto(),
             default => new ModernCrypto(),
