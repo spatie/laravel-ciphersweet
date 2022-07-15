@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.0.2 - 2022-07-15
+
+- Blind indexes now use upserts instead of updateOrInsert
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.0.1...1.0.2
+
 ## 1.0.1 - 2022-07-11
 
 ### What's Changed
