@@ -49,12 +49,15 @@ trait UsesCipherSweet
     public function updateBlindIndexes(): void
     {
         foreach (static::$cipherSweetEncryptedRow->getAllBlindIndexes($this->getAttributes()) as $name => $blindIndex) {
-            DB::table('blind_indexes')->updateOrInsert([
+            DB::table('blind_indexes')->upsert([
+                'value' => $blindIndex,
                 'indexable_type' => $this->getMorphClass(),
                 'indexable_id' => $this->getKey(),
                 'name' => $name,
             ], [
-                'value' => $blindIndex,
+                'indexable_type',
+                'indexable_id',
+                'name',
             ]);
         }
     }
