@@ -62,6 +62,14 @@ trait UsesCipherSweet
         }
     }
 
+    public function deleteBlindIndexes(): void
+    {
+        DB::table('blind_indexes')
+            ->where('indexable_type', $this->getMorphClass())
+            ->where('indexable_id', $this->getKey())
+            ->delete();
+    }
+
     public function decryptRow(): void
     {
         $this->setRawAttributes(static::$cipherSweetEncryptedRow->decryptRow($this->getAttributes()), true);

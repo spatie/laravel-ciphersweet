@@ -16,6 +16,8 @@ interface CipherSweetEncrypted
 
     public function updateBlindIndexes(): void;
 
+    public function deleteBlindIndexes(): void;
+
     public function scopeWhereBlind(
         Builder $query,
         string $column,

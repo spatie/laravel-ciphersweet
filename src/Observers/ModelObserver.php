@@ -4,16 +4,14 @@ namespace Spatie\LaravelCipherSweet\Observers;
 
 use ErrorException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class ModelObserver
 {
     public function deleting(CipherSweetEncrypted $model): void
     {
-        DB::table('blind_indexes')
-            ->where('indexable_type', $model->getMorphClass())
-            ->where('indexable_id', $model->getKey())
-            ->delete();
+        $model->deleteBlindIndexes();
     }
 
     public function retrieved(CipherSweetEncrypted $model): void
