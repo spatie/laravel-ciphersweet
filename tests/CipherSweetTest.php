@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
 use ParagonIE\ConstantTime\Hex;
+
 use function Pest\Laravel\artisan;
+
 use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
 use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;

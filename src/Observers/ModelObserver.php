@@ -3,8 +3,6 @@
 namespace Spatie\LaravelCipherSweet\Observers;
 
 use ErrorException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class ModelObserver
