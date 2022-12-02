@@ -100,6 +100,7 @@ You'll need to implement the `configureCipherSweet` method to configure CipherSw
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 use Spatie\LaravelCipherSweet\Concerns\UsesCipherSweet;
 use ParagonIE\CipherSweet\EncryptedRow;
+use ParagonIE\CipherSweet\BlindIndex;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model implements CipherSweetEncrypted
