@@ -1,6 +1,3 @@
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
-
 # Use CipherSweet in your Laravel project
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
