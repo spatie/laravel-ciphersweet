@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.0.4 - 2023-01-26
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.3 to 1.3.4 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/19
+- Bump dependabot/fetch-metadata from 1.3.4 to 1.3.5 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/20
+- Update README.md by @TeddyBear06 in https://github.com/spatie/laravel-ciphersweet/pull/23
+- Bump ramsey/composer-install from 1 to 2 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/22
+
+### New Contributors
+
+- @TeddyBear06 made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/23
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.0.3...1.0.4
+
 ## 1.0.3 - 2022-07-26
 
 - Move deleting blind indexes to trait so it can be overridden
