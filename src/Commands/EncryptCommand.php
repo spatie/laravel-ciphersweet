@@ -69,7 +69,7 @@ class EncryptCommand extends Command
 
         DB::table($newClass->getTable())
             ->orderBy((new $modelClass())
-                ->getKeyName(),$sortDirection)
+                ->getKeyName(), $sortDirection)
             ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
                 $model = (array)$model;
 
