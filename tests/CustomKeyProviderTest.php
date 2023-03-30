@@ -4,25 +4,26 @@ use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\Backend\Key\SymmetricKey;
 use ParagonIE\CipherSweet\CipherSweet;
 use ParagonIE\CipherSweet\Contract\KeyProviderInterface;
-use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
-class CustomKeyProviderFactory {
+class CustomKeyProviderFactory
+{
     public function __invoke()
     {
         return new CustomKeyProvider();
     }
 }
 
-class InvalidKeyProviderFactory {
+class InvalidKeyProviderFactory
+{
     public function __invoke()
     {
         return new self();
     }
 }
 
-class CustomKeyProvider implements KeyProviderInterface {
-
+class CustomKeyProvider implements KeyProviderInterface
+{
     public function getSymmetricKey(): SymmetricKey
     {
         return new SymmetricKey('123');

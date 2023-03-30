@@ -49,7 +49,7 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
     {
         if (config('ciphersweet.provider') === 'custom') {
             $class = config('ciphersweet.providers.custom');
-            $provider = (new $class)();
+            $provider = (new $class())();
 
             if (! $provider instanceof KeyProviderInterface) {
                 throw new \Exception($provider::class . ' must implement ' . KeyProviderInterface::class);
