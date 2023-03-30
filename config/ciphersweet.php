@@ -15,7 +15,7 @@ return [
      * is to read a string literal out of .env, but it's also possible to
      * provide the key in a file or use random keys for testing.
      *
-     * Supported: "file", "random", "string"
+     * Supported: "file", "random", "string", "custom"
      */
     'provider' => env('CIPHERSWEET_PROVIDER', 'string'),
 
@@ -32,5 +32,6 @@ return [
         'string' => [
             'key' => env('CIPHERSWEET_KEY'),
         ],
+        // 'custom' => CustomKeyProviderFactory::class,
     ],
 ];

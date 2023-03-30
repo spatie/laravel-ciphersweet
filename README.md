@@ -206,6 +206,29 @@ php artisan ciphersweet:encrypt "App\User" <your-new-key>
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
 
+## Implementing a custom key provider
+
+You can implement a custom key provider by setting the `ciphersweet.provider` config value to `custom`.
+
+The `ciphersweet.providers.custom` config value must then be set to an invokeable factory class that returns an implementation of `ParagonIE\CipherSweet\Contract\KeyProviderInterface`  
+
+```php
+class CustomKeyProviderFactory {
+    public function __invoke()
+    {
+        return new CustomKeyProvider();
+    }
+}
+
+class CustomKeyProvider implements KeyProviderInterface {
+
+    public function getSymmetricKey(): SymmetricKey
+    {
+        return new SymmetricKey(''); // Your logic here.
+    }
+}
+```
+
 ## Testing
 
 ```bash

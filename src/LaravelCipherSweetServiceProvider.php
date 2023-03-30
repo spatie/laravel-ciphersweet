@@ -47,6 +47,17 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
 
     protected function buildKeyProvider(BackendInterface $backend): KeyProviderInterface
     {
+        if (config('ciphersweet.provider') === 'custom') {
+            $class = config('ciphersweet.providers.custom');
+            $provider = (new $class)();
+
+            if (! $provider instanceof KeyProviderInterface) {
+                throw new \Exception($provider::class . ' must implement ' . KeyProviderInterface::class);
+            }
+
+            return $provider;
+        }
+
         return match (config('ciphersweet.provider')) {
             'file' => new FileProvider(config('ciphersweet.providers.file.path')),
             'string' => new StringProvider(config('ciphersweet.providers.string.key')),
