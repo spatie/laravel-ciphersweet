@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.1.0 - 2023-03-30
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.5 to 1.3.6 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/25
+- [feat] implement sortDir as an optional argument by @aryala7 in https://github.com/spatie/laravel-ciphersweet/pull/27
+- Allow implementing a custom provider
+
+### New Contributors
+
+- @aryala7 made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/27
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.0.4...1.1.0
+
 ## 1.0.4 - 2023-01-26
 
 ### What's Changed
