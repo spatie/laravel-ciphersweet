@@ -206,6 +206,74 @@ php artisan ciphersweet:encrypt "App\User" <your-new-key>
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
 
+## Implementing a custom backend
+
+You can implement a custom backend by setting the `ciphersweet.backend` config value to `custom`.
+
+The `ciphersweet.backend.custom` config value must then be set to an invokeable factory class that returns an implementation of `ParagonIE\CipherSweet\Contract\BackendInterface`
+
+```php
+class CustomBackendFactory {
+    public function __invoke()
+    {
+        return new CustomBackend();
+    }
+}
+
+class CustomBackend implements BackendInterface {
+
+    public function encrypt(string $plaintext, SymmetricKey $key, string $aad = ''): string
+    {
+        // Your logic here.
+    }
+
+    public function decrypt(string $ciphertext, SymmetricKey $key, string $aad = ''): string
+    {
+        // Your logic here.
+    }
+
+    public function blindIndexFast(string $plaintext, SymmetricKey $key, ?int $bitLength = null): string
+    {
+        // Your logic here.
+    }
+
+    public function blindIndexSlow(string $plaintext, SymmetricKey $key, ?int $bitLength = null, array $config = []): string
+    {
+        // Your logic here.
+    }
+
+    public function getIndexTypeColumn(string $tableName, string $fieldName, string $indexName): string
+    {
+        // Your logic here.
+    }
+
+    public function deriveKeyFromPassword(string $password, string $salt): SymmetricKey
+    {
+        // Your logic here.return new SymmetricKey('123');
+    }
+
+    public function doStreamDecrypt($inputFP, $outputFP, SymmetricKey $key, int $chunkSize = 8192): bool
+    {
+        // Your logic here.
+    }
+
+    public function doStreamEncrypt($inputFP, $outputFP, SymmetricKey $key, int $chunkSize = 8192, string $salt = Constants::DUMMY_SALT): bool
+    {
+        // Your logic here.
+    }
+
+    public function getFileEncryptionSaltOffset(): int
+    {
+        // Your logic here.
+    }
+
+    public function getPrefix(): string
+    {
+        // Your logic here.
+    }
+}
+```
+
 ## Implementing a custom key provider
 
 You can implement a custom key provider by setting the `ciphersweet.provider` config value to `custom`.

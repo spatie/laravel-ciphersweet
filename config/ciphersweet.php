@@ -6,9 +6,17 @@ return [
      * Unless you have specific compliance requirements, you should choose
      * "nacl".
      *
-     * Supported: "boring", "fips", "nacl"
+     * Supported: "boring", "fips", "nacl", "custom"
      */
     'backend' => env('CIPHERSWEET_BACKEND', 'nacl'),
+
+    /**
+     * Set backend-specific options here. "custom" points to a factory class that returns a
+     * backend from its `__invoke` method. Please see the docs for more details.
+     */
+    'backends' => [
+        // 'custom' => CustomBackendFactory::class,
+    ],
 
     /**
      * Select which key provider your application will use. The default option
