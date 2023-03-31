@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.2.0 - 2023-03-31
+
+### What's Changed
+
+- Implement custom backend by @stevenmaguire in https://github.com/spatie/laravel-ciphersweet/pull/29
+
+### New Contributors
+
+- @stevenmaguire made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/29
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.1.0...1.2.0
+
 ## 1.1.0 - 2023-03-30
 
 ### What's Changed
