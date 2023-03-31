@@ -36,8 +36,7 @@ class CustomBackend implements BackendInterface
         string $ciphertext,
         SymmetricKey $key,
         string $aad = ''
-    ): string
-    {
+    ): string {
         return 'john@example.com';
     }
 
