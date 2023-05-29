@@ -162,7 +162,17 @@ An encryption key is used to encrypt your values.  You can generate a new Cipher
 php artisan ciphersweet:generate-key
 ```
 
-### 3. Encrypting model attributes
+### 3. Updating your .env file
+
+After the key has been generated, you should add the generated CipherSweet key to your .env file.
+
+```text
+CIPHERSWEET_KEY=<YOUR-KEY>
+```
+
+The key will be used by your application to manage encrypted values.
+
+### 4. Encrypting model attributes
 
 With this in place, you can run this command to encrypt all values:
 
@@ -174,15 +184,6 @@ The command will update all the encrypted fields and blind indexes of the model.
 
 If you have a lot of rows, this process can take a long time. The command is restartable: it can be re-run without needing to re-encrypt already rotated keys.
 
-### 4. Updating your .env file
-
-After the fields have been encrypted, you should add the generated CipherSweet key to your .env file.
-
-```text
-CIPHERSWEET_KEY=<YOUR-KEY>
-```
-
-The key will be used by your application to read encrypted values.
 
 ### Searching on blind indexes
 
