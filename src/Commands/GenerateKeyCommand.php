@@ -19,10 +19,10 @@ class GenerateKeyCommand extends Command
         $this->info('');
         $this->info($encryptionKey);
         $this->info('');
-        $this->info('First, you should encrypt your model values using this command');
-        $this->info("ciphersweet:encrypt <MODEL-CLASS> {$encryptionKey}");
-        $this->info('');
-        $this->info('Next, you should add this line to your .env file');
+        $this->info('First, you should add this line to your .env file');
         $this->info("CIPHERSWEET_KEY={$encryptionKey}");
+        $this->info('');
+        $this->info('Next, you may encrypt your model values using this command');
+        $this->info("ciphersweet:encrypt <MODEL-CLASS> {$encryptionKey}");
     }
 }
