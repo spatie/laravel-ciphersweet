@@ -3,6 +3,7 @@
 namespace Spatie\LaravelCipherSweet\Concerns;
 
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
@@ -82,6 +83,24 @@ trait UsesCipherSweet
         string|array $value
     ): Builder {
         return $query->whereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
+    }
+
+    public function scopeWhereStartsWith(
+        Builder $query,
+        string $column,
+        string $indexName,
+        string|array $value,
+        int $indexSize
+    ): Collection {
+        $builder = $this->scopeWhereBlind($query, $column, $indexName, $value );
+        $allItems = $builder->get();
+
+        $searchedItem = substr($value, 0, $indexSize);
+        $filteredItems = $allItems->filter(function ($item) use ($searchedItem, $column) {
+            return false !== str_contains($item[$column], $searchedItem);
+        })->values();
+
+        return $filteredItems;
     }
 
     public function scopeOrWhereBlind(
