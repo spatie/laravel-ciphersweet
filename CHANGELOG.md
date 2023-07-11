@@ -2,6 +2,22 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.3.0 - 2023-07-11
+
+### What's Changed
+
+- Bump dependabot/fetch-metadata from 1.3.6 to 1.4.0 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/35
+- Bump dependabot/fetch-metadata from 1.4.0 to 1.5.1 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/37
+- Fix documentation regarding encryption key setup and use by @mgkimsal in https://github.com/spatie/laravel-ciphersweet/pull/40
+- Bump dependabot/fetch-metadata from 1.5.1 to 1.6.0 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/41
+- [feat] add permit_empty to config file by @aryala7 in https://github.com/spatie/laravel-ciphersweet/pull/43
+
+### New Contributors
+
+- @mgkimsal made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/40
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.2.0...1.3.0
+
 ## 1.2.0 - 2023-03-31
 
 ### What's Changed
