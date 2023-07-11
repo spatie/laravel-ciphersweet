@@ -72,7 +72,7 @@ trait UsesCipherSweet
 
     public function decryptRow(): void
     {
-        $this->setRawAttributes(static::$cipherSweetEncryptedRow->decryptRow($this->getAttributes()), true);
+        $this->setRawAttributes(static::$cipherSweetEncryptedRow->setPermitEmpty(config('ciphersweet.permit_empty', false))->decryptRow($this->getAttributes()), true);
     }
 
     public function scopeWhereBlind(
