@@ -117,6 +117,18 @@ class User extends Model implements CipherSweetEncrypted
      * ->addTextField('column_name')
      * ```
      *
+     * Optional Fields
+     * 
+     * These do not encrypt when NULL is provided as a value.
+     * Instead, they become an unencrypted NULL.
+     * 
+     * ```
+     * ->addOptionalTextField('column_name')
+     * ->addOptionalBooleanField('column_name')
+     * ->addOptionalFloatField('column_name')
+     * ->addOptionalIntegerField('column_name')
+     * ```
+     * 
      * A JSON array can be encrypted as long as the key structure is defined in
      * a field map. See the docs for details on defining field maps.
      *
