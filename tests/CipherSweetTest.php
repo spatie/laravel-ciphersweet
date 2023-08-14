@@ -8,7 +8,6 @@ use ParagonIE\ConstantTime\Hex;
 use function Pest\Laravel\artisan;
 
 use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
-use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
 beforeEach(function () {
