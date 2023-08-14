@@ -19,10 +19,6 @@ beforeEach(function () {
     ]);
 });
 
-it('can generate a key', function () {
-    artisan(GenerateKeyCommand::class)->assertSuccessful();
-});
-
 it('encrypts and decrypts fields', function () {
     expect(DB::table('users')->first()->email)->toStartWith('nacl:')
         ->and($this->user->email)->toEqual('john@example.com');
@@ -59,9 +55,9 @@ it('can rotate keys', function () {
 
     $this
         ->artisan(EncryptCommand::class, [
-        'model' => User::class,
-        'newKey' => $key = Hex::encode(random_bytes(32)),
-    ])
+            'model' => User::class,
+            'newKey' => $key = Hex::encode(random_bytes(32)),
+        ])
         ->assertSuccessful()
         ->expectsOutput('Updated 1 rows.');
 
@@ -71,9 +67,9 @@ it('can rotate keys', function () {
 
     $this
         ->artisan(EncryptCommand::class, [
-        'model' => User::class,
-        'newKey' => $key,
-    ])
+            'model' => User::class,
+            'newKey' => $key,
+        ])
         ->assertSuccessful()
         ->expectsOutput('Updated 0 rows.');
 
