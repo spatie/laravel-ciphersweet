@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.4.0 - 2023-08-14
+
+### What's Changed
+
+- [feat] update readme.md by @aryala7 in https://github.com/spatie/laravel-ciphersweet/pull/46
+- Revamp key generation command by @rjindael in https://github.com/spatie/laravel-ciphersweet/pull/47
+
+### New Contributors
+
+- @rjindael made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/47
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.3.0...1.4.0
+
 ## 1.3.0 - 2023-07-11
 
 ### What's Changed
