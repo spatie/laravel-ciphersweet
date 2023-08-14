@@ -3,26 +3,117 @@
 namespace Spatie\LaravelCipherSweet\Commands;
 
 use Illuminate\Console\Command;
-use ParagonIE\ConstantTime\Hex;
+use Illuminate\Console\ConfirmableTrait;
 
+#[AsCommand(name: 'ciphersweet:generate-key')]
 class GenerateKeyCommand extends Command
 {
-    protected $signature = 'ciphersweet:generate-key';
+    use ConfirmableTrait;
 
-    protected $description = 'Generate a CipherSweet encryption key';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'ciphersweet:generate-key
+        {--show : Display the CipherSweet key instead of modifying files}
+        {--force : Force the operation to run when in production}';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Set the CipherSweet key';
+
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
     public function handle()
     {
-        $encryptionKey = Hex::encode(random_bytes(32));
+        $key = $this->generateRandomKey();
 
-        $this->info('Here is your new encryption key');
-        $this->info('');
-        $this->info($encryptionKey);
-        $this->info('');
-        $this->info('First, you should add this line to your .env file');
-        $this->info("CIPHERSWEET_KEY={$encryptionKey}");
-        $this->info('');
-        $this->info('Next, you may encrypt your model values using this command');
-        $this->info("ciphersweet:encrypt <MODEL-CLASS> {$encryptionKey}");
+        if ($this->option('show')) {
+            $this->line('<comment>' . $key . '</comment>');
+            return;
+        }
+
+        if (!$this->setKeyInEnvironmentFile($key)) {
+            return;
+        }
+
+        $this->laravel['config']['ciphersweet.providers.string.key'] = $key;
+
+        $this->components->info('CipherSweet key set successfully.');
+    }
+
+    /**
+     * Generate a random CipherSweet key.
+     *
+     * @return string
+     */
+    protected function generateRandomKey(): string
+    {
+        return bin2hex(random_bytes(32));
+    }
+
+    /**
+     * Set the CipherSweet key in the environment file.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function setKeyInEnvironmentFile($key): bool
+    {
+        $currentKey = $this->laravel['config']['ciphersweet.providers.string.key'];
+
+        if (strlen($currentKey) !== 0 && (!$this->confirmToProceed())) {
+            return false;
+        }
+
+        if (!$this->writeNewEnvironmentFileWith($key)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Write a new environment file with the given CipherSweet key.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    protected function writeNewEnvironmentFileWith($key)
+    {
+        $replaced = preg_replace(
+            $this->keyReplacementPattern(),
+            'CIPHERSWEET_KEY=' . $key,
+            $input = file_get_contents($this->laravel->environmentFilePath())
+        );
+
+        if ($replaced === $input || $replaced === null) {
+            $this->error('Unable to set CipherSweet key. No CIPHERSWEET_KEY variable was found in the .env file.');
+
+            return false;
+        }
+
+        file_put_contents($this->laravel->environmentFilePath(), $replaced);
+
+        return true;
+    }
+
+    /**
+     * Get a regex pattern that will match env CIPHERSWEET_KEY with any random key.
+     *
+     * @return string
+     */
+    protected function keyReplacementPattern()
+    {
+        $escaped = preg_quote('=' . $this->laravel['config']['ciphersweet.providers.string.key'], '/');
+
+        return "/^CIPHERSWEET_KEY{$escaped}/m";
     }
 }
