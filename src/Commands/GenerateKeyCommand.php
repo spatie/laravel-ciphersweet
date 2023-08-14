@@ -4,6 +4,7 @@ namespace Spatie\LaravelCipherSweet\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'ciphersweet:generate-key')]
 class GenerateKeyCommand extends Command
@@ -41,7 +42,7 @@ class GenerateKeyCommand extends Command
             return;
         }
 
-        if (! $this->setKeyInEnvironmentFile($key)) {
+        if (!$this->setKeyInEnvironmentFile($key)) {
             return;
         }
 
@@ -70,11 +71,11 @@ class GenerateKeyCommand extends Command
     {
         $currentKey = $this->laravel['config']['ciphersweet.providers.string.key'];
 
-        if (strlen($currentKey) !== 0 && (! $this->confirmToProceed())) {
+        if (strlen($currentKey) !== 0 && (!$this->confirmToProceed())) {
             return false;
         }
 
-        if (! $this->writeNewEnvironmentFileWith($key)) {
+        if (!$this->writeNewEnvironmentFileWith($key)) {
             return false;
         }
 
