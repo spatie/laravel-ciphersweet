@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.4.1 - 2023-08-14
+
+### What's Changed
+
+- Fix tests & phpstan by @rjindael in https://github.com/spatie/laravel-ciphersweet/pull/48
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.4.0...1.4.1
+
 ## 1.4.0 - 2023-08-14
 
 ### What's Changed
