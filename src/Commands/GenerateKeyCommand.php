@@ -7,6 +7,7 @@ use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Attribute\AsCommand;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
+    Hex
 };
 
 #[AsCommand(name: 'ciphersweet:generate-key')]
@@ -65,8 +66,7 @@ class GenerateKeyCommand extends Command
         $randomBytes = $this->generateRandomBytes();
         if ($this->option('base64'))
             return Base64UrlSafe::encode($randomBytes);
-
-        return bin2hex($randomBytes);
+        return Hex::encode($randomBytes);
     }
 
     /**
