@@ -5,6 +5,9 @@ namespace Spatie\LaravelCipherSweet\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Symfony\Component\Console\Attribute\AsCommand;
+use ParagonIE\ConstantTime\{
+    Base64UrlSafe,
+};
 
 #[AsCommand(name: 'ciphersweet:generate-key')]
 class GenerateKeyCommand extends Command
@@ -18,6 +21,7 @@ class GenerateKeyCommand extends Command
      */
     protected $signature = 'ciphersweet:generate-key
         {--show : Display the CipherSweet key instead of modifying files}
+        {--base64 : Generate key in base64 safe format}
         {--force : Force the operation to run when in production}';
 
     /**
@@ -58,7 +62,21 @@ class GenerateKeyCommand extends Command
      */
     protected function generateRandomKey(): string
     {
-        return bin2hex(random_bytes(32));
+        $randomBytes = $this->generateRandomBytes();
+        if ($this->option('base64'))
+            return Base64UrlSafe::encode($randomBytes);
+
+        return bin2hex($randomBytes);
+    }
+
+    /**
+     * Generate random bytes for key
+     *
+     * @return string
+     */
+    protected function generateRandomBytes(): string
+    {
+        return random_bytes(32);
     }
 
     /**

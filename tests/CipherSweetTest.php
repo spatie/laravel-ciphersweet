@@ -9,6 +9,7 @@ use function Pest\Laravel\artisan;
 
 use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
+use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
 
 beforeEach(function () {
     $this->user = User::create([
@@ -113,6 +114,11 @@ it('can encrypt rows when they werent encrypted', function () {
     resetCipherSweet($key);
 
     User::first(); // Shouldn't throw an exception.
+});
+
+it('can generate key in base64', function(){
+    $this->artisan('ciphersweet:generate-key --show --base64')
+     ->assertSuccessful();
 });
 
 function resetCipherSweet($key)
