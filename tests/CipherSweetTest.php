@@ -115,6 +115,16 @@ it('can encrypt rows when they werent encrypted', function () {
     User::first(); // Shouldn't throw an exception.
 });
 
+it('can generate key in hex', function(){
+    $this->artisan('ciphersweet:generate-key --show')
+     ->assertSuccessful();
+});
+
+it('can generate key in base64', function(){
+    $this->artisan('ciphersweet:generate-key --show --base64')
+     ->assertSuccessful();
+});
+
 function resetCipherSweet($key)
 {
     config()->set('ciphersweet.providers.string.key', $key);
