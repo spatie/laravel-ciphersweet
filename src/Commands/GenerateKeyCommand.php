@@ -64,9 +64,10 @@ class GenerateKeyCommand extends Command
     protected function generateRandomKey(): string
     {
         $randomBytes = $this->generateRandomBytes();
-        if ($this->option('base64'))
-            return Base64UrlSafe::encode($randomBytes);
-        return Hex::encode($randomBytes);
+
+        return $this->option('base64')
+           ? Base64UrlSafe::encode($randomBytes)
+           : Hex::encode($randomBytes);
     }
 
     /**
