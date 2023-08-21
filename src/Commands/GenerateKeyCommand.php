@@ -4,11 +4,11 @@ namespace Spatie\LaravelCipherSweet\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use Symfony\Component\Console\Attribute\AsCommand;
 use ParagonIE\ConstantTime\{
     Base64UrlSafe,
     Hex
 };
+use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'ciphersweet:generate-key')]
 class GenerateKeyCommand extends Command
