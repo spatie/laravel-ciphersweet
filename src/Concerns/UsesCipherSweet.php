@@ -40,7 +40,7 @@ trait UsesCipherSweet
         $attributes = $this->getAttributes();
 
         foreach ($fieldsToEncrypt as $field) {
-            $attributes[$field] ??= '';
+            $attributes[$field] ??= NULL;
         }
 
         $this->setRawAttributes(static::$cipherSweetEncryptedRow->encryptRow($attributes));
