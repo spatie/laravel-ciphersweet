@@ -2,6 +2,22 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.5.0 - 2023-11-07
+
+### What's Changed
+
+- Add option base64 to GenerateKeyCommand for generate key in base64. T… by @gawsoftpl in https://github.com/spatie/laravel-ciphersweet/pull/49
+- Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/52
+- Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/54
+- Ensure null values are not encrypted by @yormy in https://github.com/spatie/laravel-ciphersweet/pull/57
+
+### New Contributors
+
+- @gawsoftpl made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/49
+- @yormy made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/57
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.4.1...1.5.0
+
 ## 1.4.1 - 2023-08-14
 
 ### What's Changed
