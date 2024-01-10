@@ -64,7 +64,6 @@ class EncryptCommand extends Command
 
         $newClass = (new $modelClass());
 
-        $table_name = $this->argument('tablename') ?: $newClass->getTable();
         $this->getOutput()->progressStart(DB::table($newClass->getTable())->count());
         $sortDirection = $this->argument('sortDirection');
 
@@ -72,6 +71,7 @@ class EncryptCommand extends Command
             ->orderBy((new $modelClass())
                 ->getKeyName(), $sortDirection)
             ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
+                $table_name = $this->argument('tablename') ?: $newClass->getTable();
                 $model = (array)$model;
 
                 $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $table_name);
