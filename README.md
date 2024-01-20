@@ -80,6 +80,16 @@ return [
             'key' => env('CIPHERSWEET_KEY'),
         ],
     ],
+    
+    /*
+     * The provided code snippet checks whether the $permitEmpty property is set to false
+     * for a given field. If it is not set to false, it throws an EmptyFieldException indicating
+     * that the field is not defined in the row. This ensures that the code enforces the requirement for
+     * the field to have a value and alerts the user if it is empty or undefined.
+     * Supported: "true", "false"
+     */
+    'permit_empty' => env('CIPHERSWEET_PERMIT_EMPTY', FALSE)
+
 ];
 ```
 
