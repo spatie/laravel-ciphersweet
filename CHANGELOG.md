@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.6.1 - 2024-03-13
+
+### What's Changed
+
+* Bump ramsey/composer-install from 2 to 3 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/64
+* [feat] add table prefix to ciphersweet:encrypt command by @aryala7 in https://github.com/spatie/laravel-ciphersweet/pull/60
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.6.0...1.6.1
+
 ## 1.6.0 - 2024-03-13
 
 ### What's Changed
