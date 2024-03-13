@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.6.0 - 2024-03-13
+
+### What's Changed
+
+* Addition of `permit_empty` Configuration to README by @alissn in https://github.com/spatie/laravel-ciphersweet/pull/61
+* Laravel 11.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-ciphersweet/pull/63
+
+### New Contributors
+
+* @alissn made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/61
+* @laravel-shift made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/63
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.5.0...1.6.0
+
 ## 1.5.0 - 2023-11-07
 
 ### What's Changed
