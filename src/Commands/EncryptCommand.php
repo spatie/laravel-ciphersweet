@@ -14,7 +14,7 @@ use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class EncryptCommand extends Command
 {
-    protected $signature = 'ciphersweet:encrypt {model} {newKey} {sortDirection=asc}';
+    protected $signature = 'ciphersweet:encrypt {model} {newKey} {sortDirection=asc} {tablename?}';
 
     protected $description = 'Encrypt the values of a model';
 
@@ -71,9 +71,10 @@ class EncryptCommand extends Command
             ->orderBy((new $modelClass())
                 ->getKeyName(), $sortDirection)
             ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
+                $table_name = $this->argument('tablename') ?: $newClass->getTable();
                 $model = (array)$model;
 
-                $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $newClass->getTable());
+                $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $table_name);
                 $modelClass::configureCipherSweet($oldRow);
 
                 $newRow = new EncryptedRow(
