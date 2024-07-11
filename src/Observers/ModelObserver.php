@@ -2,7 +2,7 @@
 
 namespace Spatie\LaravelCipherSweet\Observers;
 
-use ErrorException;
+use ParagonIE\CipherSweet\Exception\EmptyFieldException;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class ModelObserver
@@ -16,7 +16,7 @@ class ModelObserver
     {
         try {
             $model->decryptRow();
-        } catch (ErrorException) {
+        } catch (EmptyFieldException) {
             // Not all fields are available to decrypt.
         }
     }
