@@ -275,12 +275,12 @@ class CustomBackend implements BackendInterface {
         // Your logic here.return new SymmetricKey('123');
     }
 
-    public function doStreamDecrypt($inputFP, $outputFP, SymmetricKey $key, int $chunkSize = 8192): bool
+    public function doStreamDecrypt($inputFP, $outputFP, SymmetricKey $key, int $chunkSize = 8192, ?AAD $aad = null): bool
     {
         // Your logic here.
     }
 
-    public function doStreamEncrypt($inputFP, $outputFP, SymmetricKey $key, int $chunkSize = 8192, string $salt = Constants::DUMMY_SALT): bool
+    public function doStreamEncrypt($inputFP, $outputFP, SymmetricKey $key, int $chunkSize = 8192, string $salt = Constants::DUMMY_SALT, ?AAD $aad = null): bool
     {
         // Your logic here.
     }
