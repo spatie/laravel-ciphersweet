@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use ParagonIE\CipherSweet\AAD;
 use ParagonIE\CipherSweet\Backend\Key\SymmetricKey;
 use ParagonIE\CipherSweet\CipherSweet;
 use ParagonIE\CipherSweet\Contract\BackendInterface;
@@ -76,7 +77,8 @@ class CustomBackend implements BackendInterface
         $inputFP,
         $outputFP,
         SymmetricKey $key,
-        int $chunkSize = 8192
+        int $chunkSize = 8192,
+        ?AAD $aad = null
     ): bool {
         return true;
     }
@@ -86,7 +88,8 @@ class CustomBackend implements BackendInterface
         $outputFP,
         SymmetricKey $key,
         int $chunkSize = 8192,
-        string $salt = Constants::DUMMY_SALT
+        string $salt = Constants::DUMMY_SALT,
+        ?AAD $aad = null
     ): bool {
         return true;
     }
