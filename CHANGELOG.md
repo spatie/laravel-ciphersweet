@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.6.2 - 2024-07-18
+
+### What's Changed
+
+* Add AAD to CustomBackend test by @mdpoulter in https://github.com/spatie/laravel-ciphersweet/pull/70
+* Catch correct exception when fields are missing during decryption by @mdpoulter in https://github.com/spatie/laravel-ciphersweet/pull/69
+
+### New Contributors
+
+* @mdpoulter made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/70
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.6.1...1.6.2
+
 ## 1.6.1 - 2024-03-13
 
 ### What's Changed
