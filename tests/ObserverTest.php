@@ -5,7 +5,7 @@ use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\UserObserver;
 
 
-it('whatever', function () {
+it('persist dirty flag in observers', function () {
     $user = User::create([
         'name' => 'John Doe',
         'password' => bcrypt('password'),
