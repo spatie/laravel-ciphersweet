@@ -69,11 +69,12 @@ trait UsesCipherSweet
             ->where('indexable_id', $this->getKey())
             ->delete();
     }
-
     public function decryptRow(): void
     {
-        $this->setRawAttributes(static::$cipherSweetEncryptedRow->setPermitEmpty(config('ciphersweet.permit_empty', false))->decryptRow($this->getAttributes()), true);
+        $this->setRawAttributes(static::$cipherSweetEncryptedRow->setPermitEmpty(config('ciphersweet.permit_empty', false))
+            ->decryptRow($this->getAttributes()), false);
     }
+
 
     public function scopeWhereBlind(
         Builder $query,
