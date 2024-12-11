@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.6.3 - 2024-12-11
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1.6.0 to 2.1.0 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/66
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/71
+* Fixing model observers integration by @yormy in https://github.com/spatie/laravel-ciphersweet/pull/74
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.6.2...1.6.3
+
 ## 1.6.2 - 2024-07-18
 
 ### What's Changed
