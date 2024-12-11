@@ -13,6 +13,7 @@ it('persist dirty flag in observers', function () {
     ]);
 
     Log::spy();
+
     User::observe(UserObserver::class);
     $user->update(['email' => 'NewEmail@example.com']);
 
