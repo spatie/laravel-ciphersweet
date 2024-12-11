@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Log;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\UserObserver;
 
-
 it('persist dirty flag in observers', function () {
     $user = User::create([
         'name' => 'John Doe',

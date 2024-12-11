@@ -1,4 +1,5 @@
 <?php
+
 namespace Spatie\LaravelCipherSweet\Tests\TestClasses;
 
 class UserObserver
@@ -11,7 +12,7 @@ class UserObserver
 
     public function saving(User $user)
     {
-        $user->name .=".";
+        $user->name .= ".";
 
         $msg = "saving: dirty=".sizeof($user->getDirty());
         \Log::info($msg);
