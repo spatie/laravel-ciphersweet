@@ -13,6 +13,9 @@ trait UsesCipherSweet
 {
     public static EncryptedRow $cipherSweetEncryptedRow;
 
+    // Keeps which attributes were really dirty when saving
+    protected array $cipherSweetSavingUnencryptedAttributes = [];
+
     protected static function bootUsesCipherSweet()
     {
         static::observe(ModelObserver::class);
@@ -73,7 +76,7 @@ trait UsesCipherSweet
     public function decryptRow(): void
     {
         $this->setRawAttributes(static::$cipherSweetEncryptedRow->setPermitEmpty(config('ciphersweet.permit_empty', false))
-            ->decryptRow($this->getAttributes()), false);
+            ->decryptRow($this->getAttributes()), true);
     }
 
     public function scopeWhereBlind(
@@ -92,6 +95,38 @@ trait UsesCipherSweet
         string|array $value
     ): Builder {
         return $query->orWhereExists(fn (Builder $query): Builder => $this->buildBlindQuery($query, $column, $indexName, $value));
+    }
+
+    public function excludeNonChangedEncryptedAttributesFromChanges(): self
+    {
+        // Changes will contain the encrypted fields, event when none of these fields were changed
+        // (because Laravel will compare the unencrypted value with the encrypted one which will never match)
+        $changes = $this->getChanges();
+
+        // Remove all encrypted attributes that were not previously dirty
+        if (! empty($changes)) {
+            foreach (static::$cipherSweetEncryptedRow->listEncryptedFields() as $field) {
+                if (! array_key_exists($field, $this->cipherSweetSavingUnencryptedAttributes)) {
+                    unset($changes[$field]);
+                } else {
+                    // Use unencrypted value instead of encrypted
+                    $changes[$field] = $this->cipherSweetSavingUnencryptedAttributes[$field];
+                }
+            }
+
+            $this->changes = $changes;
+        }
+
+        $this->cipherSweetSavingUnencryptedAttributes = [];
+
+        return $this;
+    }
+
+    public function saveDirtyAttributesForCipherSweet(): self
+    {
+        $this->cipherSweetSavingUnencryptedAttributes = $this->getDirty();
+
+        return $this;
     }
 
     private function buildBlindQuery(
