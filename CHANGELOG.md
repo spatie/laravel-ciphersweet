@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.6.4 - 2025-01-17
+
+### What's Changed
+
+* Revert PR #74 and fix getChanges() by @felabrecque in https://github.com/spatie/laravel-ciphersweet/pull/75
+
+### New Contributors
+
+* @felabrecque made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/75
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.6.3...1.6.4
+
 ## 1.6.3 - 2024-12-11
 
 ### What's Changed
