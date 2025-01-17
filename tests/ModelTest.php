@@ -2,7 +2,7 @@
 
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
-it('can have correct attributes|dirty|changes properties',function () {
+it('can have correct attributes|dirty|changes properties', function () {
     expect(User::count(), 0);
 
     $user = User::create([
