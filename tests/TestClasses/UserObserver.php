@@ -6,7 +6,7 @@ class UserObserver
 {
     public function saved(User $user)
     {
-        $msg = "saved: dirty=".sizeof($user->getDirty());
+        $msg = "saved: changed=".sizeof($user->getChanges());
         \Log::info($msg);
     }
 
