@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.6.5 - 2025-02-17
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/spatie/laravel-ciphersweet/pull/76
+* Laravel 12.x Compatibility by @laravel-shift in https://github.com/spatie/laravel-ciphersweet/pull/77
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.6.4...1.6.5
+
 ## 1.6.4 - 2025-01-17
 
 ### What's Changed
