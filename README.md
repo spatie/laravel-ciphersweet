@@ -229,6 +229,53 @@ php artisan ciphersweet:encrypt "App\User" <your-new-key>
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
 
+## Encrypted Unique Validation Rule
+
+You can now validate encrypted fields for uniqueness using the new `EncryptedUniqueRule`.
+
+When working with encrypted fields and blind indexes, Laravel’s default `Rule::unique()` validation doesn't work out of the box. This package includes a custom rule to check for uniqueness via blind indexes.
+
+### Usage
+
+You may use the rule directly:
+
+```php
+use Spatie\LaravelCipherSweet\Rules\EncryptedUniqueRule;
+
+$request->validate([
+    'email' => [new EncryptedUniqueRule(User::class, 'email_index')],
+]);
+```
+
+Or, for a more expressive approach, use the macro added to Laravel’s `Rule` class:
+
+```php
+use Illuminate\Validation\Rule;
+
+$request->validate([
+    'email' => [Rule::encryptedUnique(User::class, 'email_index')],
+]);
+```
+
+> The third parameter of the rule is the database column name. If not provided, it will default to the validation attribute name (i.e., `email` in the example above).
+
+### Ignoring a Record (e.g. on update)
+
+You can skip a specific record by using the `ignore()` method:
+
+```php
+Rule::encryptedUnique(User::class, 'email_index')->ignore($user->id)
+```
+
+Or pass the model instance:
+
+```php
+Rule::encryptedUnique(User::class, 'email_index')->ignoreModel($user)
+```
+
+> 💡 Ensure the target model implements `Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted` and defines the appropriate blind index.
+
+
 ## Implementing a custom backend
 
 You can implement a custom backend by setting the `ciphersweet.backend` config value to `custom`.
