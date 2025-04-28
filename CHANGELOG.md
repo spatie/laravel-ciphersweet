@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.7.0 - 2025-04-28
+
+### What's Changed
+
+* Add `EncryptedUniqueRule` for Encrypted Unique Validation by @alissn in https://github.com/spatie/laravel-ciphersweet/pull/78
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.6.5...1.7.0
+
 ## 1.6.5 - 2025-02-17
 
 ### What's Changed
