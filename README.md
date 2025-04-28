@@ -231,7 +231,7 @@ This will update all the encrypted fields and blind indexes of the model. Once t
 
 ## Encrypted Unique Validation Rule
 
-You can now validate encrypted fields for uniqueness using the new `EncryptedUniqueRule`.
+You can validate encrypted fields for uniqueness using `EncryptedUniqueRule`.
 
 When working with encrypted fields and blind indexes, Laravel’s default `Rule::unique()` validation doesn't work out of the box. This package includes a custom rule to check for uniqueness via blind indexes.
 
