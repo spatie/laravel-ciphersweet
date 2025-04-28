@@ -2,6 +2,7 @@
 
 namespace Spatie\LaravelCipherSweet;
 
+use Illuminate\Validation\Rule;
 use ParagonIE\CipherSweet\Backend\BoringCrypto;
 use ParagonIE\CipherSweet\Backend\FIPSCrypto;
 use ParagonIE\CipherSweet\Backend\ModernCrypto;
@@ -13,6 +14,7 @@ use ParagonIE\CipherSweet\KeyProvider\RandomProvider;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
 use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
+use Spatie\LaravelCipherSweet\Rules\EncryptedUniqueRule;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -33,6 +35,10 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
             $backend = $this->buildBackend();
 
             return new CipherSweet($this->buildKeyProvider($backend), $backend);
+        });
+
+        Rule::macro('encryptedUnique', function (string $model, string $indexName, string $column = null) {
+            return new EncryptedUniqueRule($model, $indexName, $column);
         });
     }
 
