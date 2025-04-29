@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 use Spatie\LaravelCipherSweet\Rules\EncryptedUniqueRule;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\NormalUser;
@@ -69,3 +70,9 @@ it('throws exception if model does not implement CipherSweetEncrypted', function
         'email' => [$rule],
     ])->passes(); // This should throw
 })->throws(RuntimeException::class, "The model " . NormalUser::class . " must implement " . CipherSweetEncrypted::class);
+
+it('creates an encryptedUnique rule via macro', function () {
+    $rule = Rule::encryptedUnique(User::class, 'email');
+
+    expect($rule)->toBeInstanceOf(EncryptedUniqueRule::class);
+});
