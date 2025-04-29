@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.7.1 - 2025-04-29
+
+### What's Changed
+
+* Fix type declarations for PHP 8.4 and add PHP 8.3/8.4 to CI workflow by @alissn in https://github.com/spatie/laravel-ciphersweet/pull/80
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.7.0...1.7.1
+
 ## 1.7.0 - 2025-04-28
 
 ### What's Changed
