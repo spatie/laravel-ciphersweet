@@ -37,7 +37,7 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
             return new CipherSweet($this->buildKeyProvider($backend), $backend);
         });
 
-        Rule::macro('encryptedUnique', function (string $model, string $indexName, string $column = null) {
+        Rule::macro('encryptedUnique', function (string $model, string $indexName, ?string $column = null) {
             return new EncryptedUniqueRule($model, $indexName, $column);
         });
     }
