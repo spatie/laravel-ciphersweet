@@ -2,6 +2,23 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.7.2 - 2025-09-18
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/81
+* Update issue template by @AlexVanderbist in https://github.com/spatie/laravel-ciphersweet/pull/85
+* Fix blind index WHERE clause with table prefix by @mihy in https://github.com/spatie/laravel-ciphersweet/pull/86
+* Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/84
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/82
+
+### New Contributors
+
+* @AlexVanderbist made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/85
+* @mihy made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/86
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.7.1...1.7.2
+
 ## 1.7.1 - 2025-04-29
 
 ### What's Changed
