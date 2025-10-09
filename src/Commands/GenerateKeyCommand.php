@@ -23,7 +23,7 @@ class GenerateKeyCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'ciphersweet:generate-key-test
+    protected $signature = 'ciphersweet:generate-key
         {--show : Display the CipherSweet key instead of modifying files}
         {--base64 : Generate key in base64 safe format}
         {--force : Force the operation to run when in production}';
