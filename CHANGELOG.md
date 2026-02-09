@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.7.3 - 2026-02-09
+
+### What's Changed
+
+* Append CIPHERSWEET_KEY to .env when variable doesn't exist yet in https://github.com/spatie/laravel-ciphersweet/pull/88
+* Fix PHPStan configuration and update baseline
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.7.2...1.7.3
+
 ## 1.7.2 - 2025-09-18
 
 ### What's Changed
