@@ -109,11 +109,17 @@ class GenerateKeyCommand extends Command
      */
     protected function writeNewEnvironmentFileWith($key)
     {
-        $replaced = preg_replace(
-            $this->keyReplacementPattern(),
-            'CIPHERSWEET_KEY=' . $key,
-            $input = file_get_contents($this->laravel->environmentFilePath())
-        );
+        $input = file_get_contents($this->laravel->environmentFilePath());
+
+        if (preg_match('/^CIPHERSWEET_KEY=/m', $input)) {
+            $replaced = preg_replace(
+                $this->keyReplacementPattern(),
+                'CIPHERSWEET_KEY=' . $key,
+                $input
+            );
+        } else {
+            $replaced = $input . PHP_EOL . 'CIPHERSWEET_KEY=' . $key . PHP_EOL;
+        }
 
         if ($replaced === $input || $replaced === null) {
             $this->error('Unable to set CipherSweet key. No CIPHERSWEET_KEY variable was found in the .env file.');
