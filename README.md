@@ -1,8 +1,8 @@
 # Use CipherSweet in your Laravel project
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-ciphersweet/run-tests?label=tests)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-ciphersweet/Check%20&%20fix%20styling?label=code%20style)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-ciphersweet/run-tests.yml?branch=main&label=tests)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-ciphersweet/php-cs-fixer.yml?branch=main&label=code%20style)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
 
 In your project, you might store sensitive personal data in your database. Should an unauthorised person get access to your DB, all sensitive can be read which is obviously not good.
