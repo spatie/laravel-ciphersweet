@@ -25,12 +25,12 @@
         "friendsofphp/php-cs-fixer": "^3.8",
         "nunomaduro/collision": "^6.0|^8.0",
         "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0|^11.0",
-        "pestphp/pest": "^1.21|^2.34|^3.7|^4.4",
-        "pestphp/pest-plugin-laravel": "^1.1|^2.3|^3.1|^4.1",
+        "pestphp/pest": "^1.21|^2.34|^3.7",
+        "pestphp/pest-plugin-laravel": "^1.1|^2.3|^3.1",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan-deprecation-rules": "^1.0|^2.0",
         "phpstan/phpstan-phpunit": "^1.0|^2.0",
-        "phpunit/phpunit": "^9.5|^10.5|^11.5.3|^12.0",
+        "phpunit/phpunit": "^9.5|^10.5|^11.5.3",
         "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
