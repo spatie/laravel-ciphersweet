@@ -11,13 +11,15 @@ use Spatie\LaravelCipherSweet\Observers\ModelObserver;
 /** @mixin \Illuminate\Database\Eloquent\Model */
 trait UsesCipherSweet
 {
-    public static EncryptedRow $cipherSweetEncryptedRow;
+    public static ?EncryptedRow $cipherSweetEncryptedRow = null;
 
     // Keeps which attributes were really dirty when saving
     protected array $cipherSweetSavingUnencryptedAttributes = [];
 
     protected static function bootUsesCipherSweet()
     {
+        static::$cipherSweetEncryptedRow = null;
+
         static::retrieved(function ($model) {
             app(ModelObserver::class)->retrieved($model);
         });
@@ -30,15 +32,22 @@ trait UsesCipherSweet
         static::deleting(function ($model) {
             app(ModelObserver::class)->deleting($model);
         });
+    }
 
-        $model = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+    public static function getCipherSweetEncryptedRow(): EncryptedRow
+    {
+        if (static::$cipherSweetEncryptedRow === null) {
+            $model = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
 
-        static::$cipherSweetEncryptedRow = new EncryptedRow(
-            app(CipherSweetEngine::class),
-            $model->getTable()
-        );
+            static::$cipherSweetEncryptedRow = new EncryptedRow(
+                app(CipherSweetEngine::class),
+                $model->getTable()
+            );
 
-        static::configureCipherSweet(static::$cipherSweetEncryptedRow);
+            static::configureCipherSweet(static::$cipherSweetEncryptedRow);
+        }
+
+        return static::$cipherSweetEncryptedRow;
     }
 
     abstract public static function configureCipherSweet(EncryptedRow $encryptedRow): void;
@@ -51,7 +60,7 @@ trait UsesCipherSweet
      */
     public function encryptRow(): void
     {
-        $fieldsToEncrypt = static::$cipherSweetEncryptedRow->listEncryptedFields();
+        $fieldsToEncrypt = static::getCipherSweetEncryptedRow()->listEncryptedFields();
 
         $attributes = $this->getAttributes();
 
@@ -59,12 +68,12 @@ trait UsesCipherSweet
             $attributes[$field] ??= null;
         }
 
-        $this->setRawAttributes(static::$cipherSweetEncryptedRow->encryptRow($attributes));
+        $this->setRawAttributes(static::getCipherSweetEncryptedRow()->encryptRow($attributes));
     }
 
     public function updateBlindIndexes(): void
     {
-        foreach (static::$cipherSweetEncryptedRow->getAllBlindIndexes($this->getAttributes()) as $name => $blindIndex) {
+        foreach (static::getCipherSweetEncryptedRow()->getAllBlindIndexes($this->getAttributes()) as $name => $blindIndex) {
             DB::table('blind_indexes')->upsert([
                 'value' => $blindIndex,
                 'indexable_type' => $this->getMorphClass(),
@@ -88,7 +97,7 @@ trait UsesCipherSweet
 
     public function decryptRow(): void
     {
-        $this->setRawAttributes(static::$cipherSweetEncryptedRow->setPermitEmpty(config('ciphersweet.permit_empty', false))
+        $this->setRawAttributes(static::getCipherSweetEncryptedRow()->setPermitEmpty(config('ciphersweet.permit_empty', false))
             ->decryptRow($this->getAttributes()), true);
     }
 
@@ -118,7 +127,7 @@ trait UsesCipherSweet
 
         // Remove all encrypted attributes that were not previously dirty
         if (! empty($changes)) {
-            foreach (static::$cipherSweetEncryptedRow->listEncryptedFields() as $field) {
+            foreach (static::getCipherSweetEncryptedRow()->listEncryptedFields() as $field) {
                 if (! array_key_exists($field, $this->cipherSweetSavingUnencryptedAttributes)) {
                     unset($changes[$field]);
                 } else {
@@ -153,6 +162,6 @@ trait UsesCipherSweet
             ->where('indexable_type', $this->getMorphClass())
             ->where('indexable_id', DB::raw(DB::getTablePrefix().$this->getTable() . '.' . $this->getKeyName()))
             ->where('name', $indexName)
-            ->where('value', static::$cipherSweetEncryptedRow->getBlindIndex($indexName, [$column => $value]));
+            ->where('value', static::getCipherSweetEncryptedRow()->getBlindIndex($indexName, [$column => $value]));
     }
 }
