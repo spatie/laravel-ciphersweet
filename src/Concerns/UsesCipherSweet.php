@@ -20,9 +20,11 @@ trait UsesCipherSweet
     {
         static::observe(ModelObserver::class);
 
+        $model = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+
         static::$cipherSweetEncryptedRow = new EncryptedRow(
             app(CipherSweetEngine::class),
-            (new static())->getTable()
+            $model->getTable()
         );
 
         static::configureCipherSweet(static::$cipherSweetEncryptedRow);

@@ -92,7 +92,7 @@ class EncryptedUniqueRule implements ValidationRule
      */
     private function checkModelHasEncryptedColumn(): void
     {
-        if (! (new $this->model()) instanceof CipherSweetEncrypted) {
+        if (! is_subclass_of($this->model, CipherSweetEncrypted::class)) {
             throw new RuntimeException("The model {$this->model} must implement " . CipherSweetEncrypted::class);
         }
     }
