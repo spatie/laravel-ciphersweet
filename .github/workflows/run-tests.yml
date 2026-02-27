@@ -17,7 +17,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         php: [8.1, 8.2, 8.3, 8.4]
-        laravel: ['10.*', '11.*', '12.*']
+        laravel: ['10.*', '11.*', '12.*', '13.*']
         stability: [prefer-stable]
         include:
           - laravel: 10.*
@@ -26,12 +26,18 @@ jobs:
             testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
+          - laravel: 13.*
+            testbench: 11.*
         exclude:
           - laravel: 11.*
             php: 8.1
           - laravel: 12.*
             php: 8.1
           - laravel: 12.*
+            php: 8.2
+          - laravel: 13.*
+            php: 8.1
+          - laravel: 13.*
             php: 8.2
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
@@ -51,6 +57,11 @@ jobs:
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Require Pest 4 for Laravel 13
+        if: matrix.laravel == '13.*'
+        shell: bash
+        run: composer require "pestphp/pest:^4.0" "pestphp/pest-plugin-laravel:^4.0" "phpunit/phpunit:^12.0" --dev --no-interaction --no-update
 
       - name: Install dependencies
         run: |
