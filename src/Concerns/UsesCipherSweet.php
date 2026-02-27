@@ -18,7 +18,10 @@ trait UsesCipherSweet
 
     protected static function bootUsesCipherSweet()
     {
-        static::observe(ModelObserver::class);
+        static::retrieved(function ($model) { app(ModelObserver::class)->retrieved($model); });
+        static::saving(function ($model) { app(ModelObserver::class)->saving($model); });
+        static::saved(function ($model) { app(ModelObserver::class)->saved($model); });
+        static::deleting(function ($model) { app(ModelObserver::class)->deleting($model); });
 
         $model = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
 
