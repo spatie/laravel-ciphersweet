@@ -76,3 +76,24 @@ it('creates an encryptedUnique rule via macro', function () {
 
     expect($rule)->toBeInstanceOf(EncryptedUniqueRule::class);
 });
+
+it('correctly uses the translated attribute name', function () {
+    User::create([
+        'name' => 'John Doe',
+        'password' => bcrypt('password'),
+        'email' => 'duplicate@example.com',
+    ]);
+
+    $rule = new EncryptedUniqueRule(User::class, 'email_index');
+
+    $validator = Validator::make([
+        'email' => 'duplicate@example.com',
+    ], [
+        'email' => [$rule],
+    ], [], [
+        'email' => 'custom address',
+    ]);
+
+    expect($validator->fails())->toBeTrue();
+    expect($validator->errors()->first('email'))->toContain('The custom address has already been taken');
+});
