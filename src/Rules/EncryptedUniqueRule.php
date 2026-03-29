@@ -47,9 +47,7 @@ class EncryptedUniqueRule implements ValidationRule
             ->count();
 
         if ($count) {
-            $fail(trans('validation.unique', [
-                'attribute' => $this->column,
-            ]));
+            $fail('validation.unique')->translate();
         }
     }
 
