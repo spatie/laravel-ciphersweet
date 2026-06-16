@@ -50,5 +50,11 @@ return [
      * the field to have a value and alerts the user if it is empty or undefined.
      * Supported: "true", "false"
      */
-    'permit_empty' => env('CIPHERSWEET_PERMIT_EMPTY', FALSE)
+    'permit_empty' => env('CIPHERSWEET_PERMIT_EMPTY', FALSE),
+
+    /*
+     * The database connection to use for the blind_indexes table.
+     * When null, the default database connection will be used.
+     */
+    'connection' => env('CIPHERSWEET_CONNECTION', null),
 ];

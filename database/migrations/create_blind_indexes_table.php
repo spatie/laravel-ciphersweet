@@ -6,9 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    public function __construct()
+    {
+        $this->connection = config('ciphersweet.connection');
+    }
+
     public function up()
     {
-        Schema::create('blind_indexes', function (Blueprint $table) {
+        Schema::connection($this->connection)->create('blind_indexes', function (Blueprint $table) {
             $table->morphs('indexable');
             $table->string('name');
             $table->string('value');

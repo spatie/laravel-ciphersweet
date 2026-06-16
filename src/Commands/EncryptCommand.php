@@ -64,13 +64,15 @@ class EncryptCommand extends Command
 
         $newClass = (new $modelClass());
 
-        $this->getOutput()->progressStart(DB::table($newClass->getTable())->count());
+        $connection = DB::connection($newClass->getConnectionName());
+
+        $this->getOutput()->progressStart($connection->table($newClass->getTable())->count());
         $sortDirection = $this->argument('sortDirection');
 
-        DB::table($newClass->getTable())
+        $connection->table($newClass->getTable())
             ->orderBy((new $modelClass())
                 ->getKeyName(), $sortDirection)
-            ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
+            ->each(function (object $model) use ($modelClass, $newClass, $connection, &$updatedRows) {
                 $table_name = $this->argument('tablename') ?: $newClass->getTable();
                 $model = (array)$model;
 
@@ -91,12 +93,12 @@ class EncryptCommand extends Command
                         [$ciphertext, $indices] = $newRow->prepareRowForStorage($model);
                     }
 
-                    DB::table($newClass->getTable())
+                    $connection->table($newClass->getTable())
                         ->where($newClass->getKeyName(), $model[$newClass->getKeyName()])
                         ->update(Arr::only($ciphertext, $newRow->listEncryptedFields()));
 
                     foreach ($indices as $name => $value) {
-                        DB::table('blind_indexes')->updateOrInsert([
+                        $connection->table('blind_indexes')->updateOrInsert([
                             'indexable_type' => $newClass->getMorphClass(),
                             'indexable_id' => $model[$newClass->getKeyName()],
                             'name' => $name,
