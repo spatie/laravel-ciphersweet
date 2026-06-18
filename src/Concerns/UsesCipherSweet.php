@@ -74,7 +74,7 @@ trait UsesCipherSweet
     public function updateBlindIndexes(): void
     {
         foreach (static::getCipherSweetEncryptedRow()->getAllBlindIndexes($this->getAttributes()) as $name => $blindIndex) {
-            DB::table('blind_indexes')->upsert([
+            DB::connection($this->getConnectionName())->table('blind_indexes')->upsert([
                 'value' => $blindIndex,
                 'indexable_type' => $this->getMorphClass(),
                 'indexable_id' => $this->getKey(),
@@ -89,7 +89,7 @@ trait UsesCipherSweet
 
     public function deleteBlindIndexes(): void
     {
-        DB::table('blind_indexes')
+        DB::connection($this->getConnectionName())->table('blind_indexes')
             ->where('indexable_type', $this->getMorphClass())
             ->where('indexable_id', $this->getKey())
             ->delete();
@@ -157,10 +157,12 @@ trait UsesCipherSweet
         string $indexName,
         string|array $value
     ): Builder {
+        $prefix = $this->getConnection()->getTablePrefix();
+
         return $query->select(DB::raw(1))
             ->from('blind_indexes')
             ->where('indexable_type', $this->getMorphClass())
-            ->where('indexable_id', DB::raw(DB::getTablePrefix().$this->getTable() . '.' . $this->getKeyName()))
+            ->where('indexable_id', DB::raw($prefix.$this->getTable() . '.' . $this->getKeyName()))
             ->where('name', $indexName)
             ->where('value', static::getCipherSweetEncryptedRow()->getBlindIndex($indexName, [$column => $value]));
     }
