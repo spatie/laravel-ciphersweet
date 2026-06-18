@@ -2,6 +2,22 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.8.0 - 2026-06-18
+
+### What's Changed
+
+* fix: ensure validation attribute is translated in EncryptedUniqueRule by @ur-oot in https://github.com/spatie/laravel-ciphersweet/pull/96
+* Bump ramsey/composer-install from 3 to 4 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/95
+* Bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/97
+* Bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/98
+* Respect the model's database connection for blind indexes by @freekmurze in https://github.com/spatie/laravel-ciphersweet/pull/101
+
+### New Contributors
+
+* @ur-oot made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/96
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.7.4...1.8.0
+
 ## 1.7.4 - 2026-03-29
 
 ### What's Changed
