@@ -6,6 +6,8 @@ use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
+use Spatie\LaravelCipherSweet\CipherSweetDecryption;
+use Spatie\LaravelCipherSweet\Exceptions\RowNotDecrypted;
 use Spatie\LaravelCipherSweet\Observers\ModelObserver;
 
 /** @mixin \Illuminate\Database\Eloquent\Model */
@@ -15,6 +17,9 @@ trait UsesCipherSweet
 
     // Keeps which attributes were really dirty when saving
     protected array $cipherSweetSavingUnencryptedAttributes = [];
+
+    // Whether this instance's encrypted attributes still hold ciphertext
+    protected bool $cipherSweetRowIsEncrypted = false;
 
     protected static function bootUsesCipherSweet()
     {
@@ -58,8 +63,15 @@ trait UsesCipherSweet
      * @throws \ParagonIE\CipherSweet\Exception\CryptoOperationException
      * @throws \SodiumException
      */
+    /**
+     * @throws RowNotDecrypted when the row still holds ciphertext, which encrypting would double
+     */
     public function encryptRow(): void
     {
+        if ($this->cipherSweetRowIsEncrypted) {
+            throw RowNotDecrypted::make(static::class);
+        }
+
         $fieldsToEncrypt = static::getCipherSweetEncryptedRow()->listEncryptedFields();
 
         $attributes = $this->getAttributes();
@@ -97,8 +109,41 @@ trait UsesCipherSweet
 
     public function decryptRow(): void
     {
+        if (CipherSweetDecryption::isSuspended()) {
+            $this->cipherSweetRowIsEncrypted = true;
+
+            return;
+        }
+
+        $this->performCipherSweetDecryption();
+    }
+
+    /**
+     * Decrypt a row that was retrieved while decryption was suspended.
+     *
+     * Unlike decryptRow(), this is safe to call on an already decrypted row, and it still decrypts
+     * when called inside the suspending callback.
+     */
+    public function decryptNow(): static
+    {
+        if ($this->cipherSweetRowIsEncrypted) {
+            $this->performCipherSweetDecryption();
+        }
+
+        return $this;
+    }
+
+    public function isEncryptedInMemory(): bool
+    {
+        return $this->cipherSweetRowIsEncrypted;
+    }
+
+    protected function performCipherSweetDecryption(): void
+    {
         $this->setRawAttributes(static::getCipherSweetEncryptedRow()->setPermitEmpty(config('ciphersweet.permit_empty', false))
             ->decryptRow($this->getAttributes()), true);
+
+        $this->cipherSweetRowIsEncrypted = false;
     }
 
     public function scopeWhereBlind(

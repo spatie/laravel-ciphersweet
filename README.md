@@ -229,6 +229,30 @@ php artisan ciphersweet:encrypt "App\User" <your-new-key>
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
 
+### Retrieving models without decrypting
+
+Models are decrypted as they are retrieved, so every hydrated row decrypts every encrypted field whether or not you read one. When you don't need those values — counting rows, reading only non-encrypted columns, or serving a response that must not expose them — you can suspend it:
+
+```php
+use Spatie\LaravelCipherSweet\CipherSweetDecryption;
+
+$users = CipherSweetDecryption::suspend(fn () => User::where('active', true)->get());
+
+$users->first()->email; // 'nacl:...', the value as stored
+```
+
+Suspension applies to everything retrieved inside the callback, including eager-loaded relations, and the previous state is restored afterwards even if the callback throws.
+
+To decrypt such a model after all, call `decryptNow()`. It is safe to call more than once, and `isEncryptedInMemory()` tells you whether a model still holds ciphertext.
+
+```php
+$user->isEncryptedInMemory(); // true
+
+$user->decryptNow()->email; // 'rias@spatie.be'
+```
+
+Saving a model retrieved this way would encrypt the stored ciphertext a second time and lose the value, so it throws a `RowNotDecrypted` exception instead. Call `decryptNow()` first if you intend to write.
+
 ## Encrypted Unique Validation Rule
 
 You can validate encrypted fields for uniqueness using `EncryptedUniqueRule`.
