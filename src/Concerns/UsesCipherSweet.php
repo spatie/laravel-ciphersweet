@@ -62,8 +62,6 @@ trait UsesCipherSweet
      * @throws \ParagonIE\CipherSweet\Exception\ArrayKeyException
      * @throws \ParagonIE\CipherSweet\Exception\CryptoOperationException
      * @throws \SodiumException
-     */
-    /**
      * @throws RowNotDecrypted when the row still holds ciphertext, which encrypting would double
      */
     public function encryptRow(): void
@@ -118,12 +116,6 @@ trait UsesCipherSweet
         $this->performCipherSweetDecryption();
     }
 
-    /**
-     * Decrypt a row that was retrieved while decryption was suspended.
-     *
-     * Unlike decryptRow(), this is safe to call on an already decrypted row, and it still decrypts
-     * when called inside the suspending callback.
-     */
     public function decryptNow(): static
     {
         if ($this->cipherSweetRowIsEncrypted) {
