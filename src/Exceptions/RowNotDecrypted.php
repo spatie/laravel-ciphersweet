@@ -6,12 +6,9 @@ use Exception;
 
 class RowNotDecrypted extends Exception
 {
-    public static function make(string $model): self
+    /** @param class-string $modelClass */
+    public static function forModel(string $modelClass): self
     {
-        return new self(
-            "Refusing to save {$model}: it was retrieved while decryption was suspended, so saving "
-            . 'it would encrypt the stored ciphertext a second time and lose the value. Call '
-            . 'decryptNow() on the model first.',
-        );
+        return new self("Refusing to save {$modelClass}: its encrypted attributes still hold ciphertext, so encrypting them again would lose the value. Call decryptNow() on the model first.");
     }
 }

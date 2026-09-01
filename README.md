@@ -231,7 +231,7 @@ This will update all the encrypted fields and blind indexes of the model. Once t
 
 ### Retrieving models without decrypting
 
-Models are decrypted as they are retrieved, so every hydrated row decrypts every encrypted field whether or not you read one. When you don't need those values — counting rows, reading only non-encrypted columns, or serving a response that must not expose them — you can suspend it:
+Models are decrypted as they are retrieved, so every hydrated row decrypts every encrypted field whether or not you read one. When you only need the non-encrypted columns, or you are serving a response that must not expose the encrypted ones, you can suspend that:
 
 ```php
 use Spatie\LaravelCipherSweet\CipherSweetDecryption;
@@ -241,17 +241,21 @@ $users = CipherSweetDecryption::suspend(fn () => User::where('active', true)->ge
 $users->first()->email; // 'nacl:...', the value as stored
 ```
 
-Suspension applies to everything retrieved inside the callback, including eager-loaded relations, and the previous state is restored afterwards even if the callback throws.
+Suspension applies to every model retrieved inside the callback, including eager-loaded relations, and the previous state is restored afterwards even if the callback throws. It is process-wide for the duration of the callback, so anything else that runs inside it, such as a synchronously dispatched job or an event listener, retrieves models without decrypting too.
 
 To decrypt such a model after all, call `decryptNow()`. It is safe to call more than once, and `isEncryptedInMemory()` tells you whether a model still holds ciphertext.
 
 ```php
+$user = $users->first();
+
 $user->isEncryptedInMemory(); // true
 
 $user->decryptNow()->email; // 'rias@spatie.be'
 ```
 
-Saving a model retrieved this way would encrypt the stored ciphertext a second time and lose the value, so it throws a `RowNotDecrypted` exception instead. Call `decryptNow()` first if you intend to write.
+Saving a model that still holds ciphertext would encrypt it a second time and lose the value, so it throws a `RowNotDecrypted` exception instead. Call `decryptNow()` first if you intend to write.
+
+Models you save inside the callback are not affected. They are encrypted, stored, and decrypted again as usual, so their blind indexes stay correct.
 
 ## Encrypted Unique Validation Rule
 

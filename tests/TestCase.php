@@ -2,6 +2,8 @@
 
 namespace Spatie\LaravelCipherSweet\Tests;
 
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
 use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\LaravelCipherSweetServiceProvider;
@@ -32,5 +34,9 @@ class TestCase extends Orchestra
 
         $migration = include __DIR__.'/../database/migrations/create_blind_indexes_table.php';
         $migration->up();
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('manager_id')->nullable();
+        });
     }
 }
