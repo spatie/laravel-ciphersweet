@@ -8,6 +8,7 @@ use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
 use Spatie\LaravelCipherSweet\Exceptions\RowNotDecrypted;
 use Spatie\LaravelCipherSweet\Observers\ModelObserver;
+use Throwable;
 
 /** @mixin \Illuminate\Database\Eloquent\Model */
 trait UsesCipherSweet
@@ -118,18 +119,22 @@ trait UsesCipherSweet
 
     public function isEncryptedInMemory(): bool
     {
-        $prefix = static::getCipherSweetEncryptedRow()->getBackend()->getPrefix();
-
         $attributes = $this->getAttributes();
 
-        foreach (static::getCipherSweetEncryptedRow()->listEncryptedFields() as $field) {
-            $value = $attributes[$field] ?? null;
+        try {
+            $decrypted = static::getCipherSweetEncryptedRow()
+                ->setPermitEmpty(config('ciphersweet.permit_empty', false))
+                ->decryptRow($attributes);
+        } catch (Throwable) {
+            return false;
+        }
 
-            if (! is_string($value)) {
+        foreach (static::getCipherSweetEncryptedRow()->listEncryptedFields() as $field) {
+            if (! array_key_exists($field, $attributes)) {
                 continue;
             }
 
-            if (str_starts_with($value, $prefix)) {
+            if ($decrypted[$field] !== $attributes[$field]) {
                 return true;
             }
         }

@@ -241,7 +241,9 @@ $users = CipherSweetDecryption::suspend(fn () => User::where('active', true)->ge
 $users->first()->email; // 'nacl:...', the value as stored
 ```
 
-Suspension applies to every model retrieved inside the callback, including eager-loaded relations, and the previous state is restored afterwards even if the callback throws. It is process-wide for the duration of the callback, so anything else that runs inside it, such as a synchronously dispatched job or an event listener, retrieves models without decrypting too.
+Suspension applies to every model hydrated while the callback runs, including eager-loaded relations, and the previous state is restored afterwards even if the callback throws. It is process-wide for the duration of the callback, so anything else that runs inside it, such as a synchronously dispatched job or an event listener, retrieves models without decrypting too.
+
+What counts is when a model is hydrated, not where the query was built. A `cursor()` or `lazy()` result iterated after the callback has returned, and a relation loaded lazily later on, both decrypt as usual. Retrieve inside the callback if you need them suspended.
 
 To decrypt such a model after all, call `decryptNow()`. It is safe to call more than once, and `isEncryptedInMemory()` tells you whether a model still holds ciphertext.
 
