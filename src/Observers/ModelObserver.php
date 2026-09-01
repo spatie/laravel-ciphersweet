@@ -3,7 +3,6 @@
 namespace Spatie\LaravelCipherSweet\Observers;
 
 use ParagonIE\CipherSweet\Exception\EmptyFieldException;
-use Spatie\LaravelCipherSweet\CipherSweetDecryption;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class ModelObserver
@@ -15,10 +14,6 @@ class ModelObserver
 
     public function retrieved(CipherSweetEncrypted $model): void
     {
-        if (CipherSweetDecryption::isSuspended()) {
-            return;
-        }
-
         try {
             $model->decryptRow();
         } catch (EmptyFieldException) {

@@ -255,7 +255,7 @@ $user->isEncryptedInMemory(); // true
 $user->decryptNow()->email; // 'rias@spatie.be'
 ```
 
-Saving a model that still holds ciphertext would encrypt it a second time and lose the value, so it throws a `RowNotDecrypted` exception instead. Call `decryptNow()` first if you intend to write.
+Saving a model that still holds ciphertext would encrypt it a second time and lose the value, so it throws a `RowNotDecrypted` exception instead. Call `decryptNow()` first if you intend to write. Decrypting needs every encrypted column of the row, so a model fetched with a partial `select()` cannot be decrypted afterwards, and it refuses to save rather than overwriting the columns it never loaded.
 
 Models you save inside the callback are not affected. They are encrypted, stored, and decrypted again as usual, so their blind indexes stay correct.
 

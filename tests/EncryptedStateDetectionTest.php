@@ -1,5 +1,6 @@
 <?php
 
+use ParagonIE\CipherSweet\Exception\EmptyFieldException;
 use Spatie\LaravelCipherSweet\CipherSweetDecryption;
 use Spatie\LaravelCipherSweet\Exceptions\RowNotDecrypted;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\Note;
@@ -61,12 +62,12 @@ it('decrypts a suspended json field on demand', function () {
         ->and($suspended->meta)->toBe(['secret' => 'shh']);
 });
 
-it('does not throw from decryptNow when only some encrypted columns were selected', function () {
+it('reports that it cannot decrypt a row whose encrypted columns were not all selected', function () {
     $note = Note::create(['title' => 'Title', 'body' => 'Body', 'meta' => ['secret' => 'shh']]);
 
     $partial = CipherSweetDecryption::suspend(fn () => Note::select('id', 'title')->find($note->id));
 
-    expect(fn () => $partial->decryptNow())->not->toThrow(Exception::class);
+    expect(fn () => $partial->decryptNow())->toThrow(EmptyFieldException::class);
 });
 
 it('reports a model whose only encrypted field is json as encrypted', function () {

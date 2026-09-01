@@ -153,11 +153,13 @@ it('saves a suspended model that was refreshed outside the callback', function (
     expect(User::find($this->user->id)->email)->toBe('jane@example.com');
 });
 
-it('does not consider a model encrypted when its encrypted columns were not selected', function () {
+it('refuses to save a suspended model whose encrypted columns were not selected', function () {
+    $before = storedEmail($this->user->id);
     $user = CipherSweetDecryption::suspend(fn () => User::select('id', 'name')->find($this->user->id));
 
-    expect($user->isEncryptedInMemory())->toBeFalse()
-        ->and($user->decryptNow()->name)->toBe('John Doe');
+    expect($user->isEncryptedInMemory())->toBeTrue()
+        ->and(fn () => $user->save())->toThrow(RowNotDecrypted::class)
+        ->and(storedEmail($this->user->id))->toBe($before);
 });
 
 it('suspends decryption for eager loaded relations', function () {
