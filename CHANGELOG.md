@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.9.0 - 2026-09-01
+
+### What's Changed
+
+* Bump actions/checkout from 6 to 7 by @dependabot[bot] in https://github.com/spatie/laravel-ciphersweet/pull/102
+* Add CipherSweetDecryption::suspend() to retrieve models without decrypting by @MartinCamen in https://github.com/spatie/laravel-ciphersweet/pull/104
+
+### New Contributors
+
+* @MartinCamen made their first contribution in https://github.com/spatie/laravel-ciphersweet/pull/104
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.8.0...1.9.0
+
 ## 1.8.0 - 2026-06-18
 
 ### What's Changed
