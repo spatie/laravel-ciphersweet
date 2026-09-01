@@ -6,6 +6,8 @@ use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use ParagonIE\CipherSweet\CipherSweet as CipherSweetEngine;
 use ParagonIE\CipherSweet\EncryptedRow;
+use Spatie\LaravelCipherSweet\CipherSweetDecryption;
+use Spatie\LaravelCipherSweet\Exceptions\RowNotDecrypted;
 use Spatie\LaravelCipherSweet\Observers\ModelObserver;
 
 /** @mixin \Illuminate\Database\Eloquent\Model */
@@ -16,11 +18,20 @@ trait UsesCipherSweet
     // Keeps which attributes were really dirty when saving
     protected array $cipherSweetSavingUnencryptedAttributes = [];
 
+    // Whether this instance's encrypted attributes currently hold ciphertext
+    protected bool $cipherSweetRowIsEncrypted = false;
+
     protected static function bootUsesCipherSweet()
     {
         static::$cipherSweetEncryptedRow = null;
 
         static::retrieved(function ($model) {
+            if (CipherSweetDecryption::isSuspended()) {
+                $model->cipherSweetRowIsEncrypted = true;
+
+                return;
+            }
+
             app(ModelObserver::class)->retrieved($model);
         });
         static::saving(function ($model) {
@@ -57,9 +68,14 @@ trait UsesCipherSweet
      * @throws \ParagonIE\CipherSweet\Exception\ArrayKeyException
      * @throws \ParagonIE\CipherSweet\Exception\CryptoOperationException
      * @throws \SodiumException
+     * @throws RowNotDecrypted When the attributes still hold ciphertext, which encrypting would double.
      */
     public function encryptRow(): void
     {
+        if ($this->cipherSweetRowIsEncrypted) {
+            throw RowNotDecrypted::forModel(static::class);
+        }
+
         $fieldsToEncrypt = static::getCipherSweetEncryptedRow()->listEncryptedFields();
 
         $attributes = $this->getAttributes();
@@ -69,6 +85,8 @@ trait UsesCipherSweet
         }
 
         $this->setRawAttributes(static::getCipherSweetEncryptedRow()->encryptRow($attributes));
+
+        $this->cipherSweetRowIsEncrypted = true;
     }
 
     public function updateBlindIndexes(): void
@@ -99,6 +117,45 @@ trait UsesCipherSweet
     {
         $this->setRawAttributes(static::getCipherSweetEncryptedRow()->setPermitEmpty(config('ciphersweet.permit_empty', false))
             ->decryptRow($this->getAttributes()), true);
+
+        $this->cipherSweetRowIsEncrypted = false;
+    }
+
+    public function decryptNow(): static
+    {
+        if ($this->cipherSweetRowIsEncrypted) {
+            $this->decryptRow();
+        }
+
+        return $this;
+    }
+
+    public function isEncryptedInMemory(): bool
+    {
+        return $this->cipherSweetRowIsEncrypted;
+    }
+
+    public function refresh()
+    {
+        parent::refresh();
+
+        // Refreshing re-queries, so the row it hands back is encrypted exactly when suspension is
+        // active. This has to assign, not only set: refreshing outside a callback is what clears
+        // the mark on a model that was retrieved inside one.
+        if ($this->exists) {
+            $this->cipherSweetRowIsEncrypted = CipherSweetDecryption::isSuspended();
+        }
+
+        return $this;
+    }
+
+    public function replicate(?array $except = null)
+    {
+        $replica = parent::replicate($except);
+
+        $replica->cipherSweetRowIsEncrypted = $this->cipherSweetRowIsEncrypted;
+
+        return $replica;
     }
 
     public function scopeWhereBlind(

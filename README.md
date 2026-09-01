@@ -229,6 +229,36 @@ php artisan ciphersweet:encrypt "App\User" <your-new-key>
 
 This will update all the encrypted fields and blind indexes of the model. Once this is done, you can update your environment or config file to use the new key.
 
+### Retrieving models without decrypting
+
+Models are decrypted as they are retrieved, so every hydrated row decrypts every encrypted field whether or not you read one. When you only need the non-encrypted columns, or you are serving a response that must not expose the encrypted ones, you can suspend that:
+
+```php
+use Spatie\LaravelCipherSweet\CipherSweetDecryption;
+
+$users = CipherSweetDecryption::suspend(fn () => User::where('active', true)->get());
+
+$users->first()->email; // 'nacl:...', the value as stored
+```
+
+Suspension applies to every model hydrated while the callback runs, including eager-loaded relations, and the previous state is restored afterwards even if the callback throws. It is process-wide for the duration of the callback, so anything else that runs inside it, such as a synchronously dispatched job or an event listener, retrieves models without decrypting too.
+
+What counts is when a model is hydrated, not where the query was built. A `cursor()` or `lazy()` result iterated after the callback has returned, and a relation loaded lazily later on, both decrypt as usual. Retrieve inside the callback if you need them suspended.
+
+To decrypt such a model after all, call `decryptNow()`. It is safe to call more than once, and `isEncryptedInMemory()` tells you whether a model still holds ciphertext.
+
+```php
+$user = $users->first();
+
+$user->isEncryptedInMemory(); // true
+
+$user->decryptNow()->email; // 'rias@spatie.be'
+```
+
+Saving a model that still holds ciphertext would encrypt it a second time and lose the value, so it throws a `RowNotDecrypted` exception instead. Call `decryptNow()` first if you intend to write. Decrypting needs every encrypted column of the row, so a model fetched with a partial `select()` cannot be decrypted afterwards, and it refuses to save rather than overwriting the columns it never loaded.
+
+Saving inside the callback still works. A model you create there, or one you retrieved before entering it, is encrypted, stored, and decrypted again as usual, so its blind indexes stay correct. A model you retrieved inside the callback holds ciphertext, so saving that one throws until you call `decryptNow()`.
+
 ## Encrypted Unique Validation Rule
 
 You can validate encrypted fields for uniqueness using `EncryptedUniqueRule`.
