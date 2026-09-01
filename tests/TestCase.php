@@ -39,12 +39,6 @@ class TestCase extends Orchestra
             $table->unsignedBigInteger('manager_id')->nullable();
         });
 
-        Schema::create('secrets', function (Blueprint $table) {
-            $table->id();
-            $table->text('payload');
-            $table->timestamps();
-        });
-
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->text('title');

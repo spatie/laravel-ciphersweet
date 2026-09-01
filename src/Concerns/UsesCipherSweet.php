@@ -139,6 +139,9 @@ trait UsesCipherSweet
     {
         parent::refresh();
 
+        // Refreshing re-queries, so the row it hands back is encrypted exactly when suspension is
+        // active. This has to assign, not only set: refreshing outside a callback is what clears
+        // the mark on a model that was retrieved inside one.
         if ($this->exists) {
             $this->cipherSweetRowIsEncrypted = CipherSweetDecryption::isSuspended();
         }

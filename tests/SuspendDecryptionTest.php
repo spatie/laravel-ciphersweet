@@ -1,8 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use ParagonIE\CipherSweet\CipherSweet;
+use ParagonIE\CipherSweet\Exception\EmptyFieldException;
+use ParagonIE\ConstantTime\Hex;
 use Spatie\LaravelCipherSweet\CipherSweetDecryption;
 use Spatie\LaravelCipherSweet\Exceptions\RowNotDecrypted;
+use Spatie\LaravelCipherSweet\Tests\TestClasses\Note;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
 
 beforeEach(function () {
@@ -16,8 +20,7 @@ beforeEach(function () {
 it('does not decrypt while decryption is suspended', function () {
     $user = CipherSweetDecryption::suspend(fn () => User::find($this->user->id));
 
-    expect($user->email)->toBe(storedEmail($this->user->id))
-        ->and($user->email)->toStartWith('nacl:');
+    expect($user->email)->toBe(storedEmail($this->user->id));
 });
 
 it('reports that a suspended model is still encrypted', function () {
@@ -52,13 +55,7 @@ it('can decrypt on demand from inside the suspending callback', function () {
     expect($email)->toBe('john@example.com');
 });
 
-it('refuses to save a model that was retrieved without decryption', function () {
-    $user = CipherSweetDecryption::suspend(fn () => User::find($this->user->id));
-
-    expect(fn () => $user->save())->toThrow(RowNotDecrypted::class);
-});
-
-it('leaves the stored ciphertext untouched when refusing to save', function () {
+it('refuses to save a model that was retrieved without decryption, leaving the ciphertext untouched', function () {
     $before = storedEmail($this->user->id);
     $user = CipherSweetDecryption::suspend(fn () => User::find($this->user->id));
 
@@ -90,7 +87,7 @@ it('keeps decryption suspended for the rest of an outer callback', function () {
         return User::find($this->user->id)->email;
     });
 
-    expect($email)->toStartWith('nacl:');
+    expect($email)->toBe(storedEmail($this->user->id));
 });
 
 it('keeps blind indexes searchable when a model is created inside the callback', function () {
@@ -175,6 +172,91 @@ it('suspends decryption for eager loaded relations', function () {
     expect($loaded->manager->email)->toBe(storedEmail($this->user->id))
         ->and($loaded->manager->isEncryptedInMemory())->toBeTrue();
 });
+
+it('saves a plaintext value that looks like ciphertext', function () {
+    $pasted = User::create([
+        'name' => 'Jane Doe',
+        'password' => bcrypt('password'),
+        'email' => storedEmail($this->user->id),
+    ]);
+
+    $reloaded = User::find($pasted->id);
+    $reloaded->update(['name' => 'Changed']);
+
+    expect(User::find($pasted->id)->email)->toBe(storedEmail($this->user->id));
+});
+
+it('refuses to save a suspended model the current key cannot decrypt', function () {
+    $before = storedEmail($this->user->id);
+    $user = CipherSweetDecryption::suspend(fn () => User::find($this->user->id));
+
+    rotateCipherSweetKey();
+
+    expect($user->isEncryptedInMemory())->toBeTrue()
+        ->and(fn () => $user->save())->toThrow(RowNotDecrypted::class)
+        ->and(storedEmail($this->user->id))->toBe($before);
+});
+
+it('saves a new model that was refreshed inside the callback', function () {
+    $user = new User([
+        'name' => 'Jane Doe',
+        'password' => bcrypt('password'),
+        'email' => 'jane@example.com',
+    ]);
+
+    CipherSweetDecryption::suspend(fn () => $user->refresh());
+
+    $user->save();
+
+    expect(User::find($user->id)->email)->toBe('jane@example.com');
+});
+
+it('refuses to save a suspended model when one field was reassigned in plaintext', function () {
+    $note = createNote();
+    $before = storedNoteColumn($note->id, 'body');
+
+    $suspended = CipherSweetDecryption::suspend(fn () => Note::find($note->id));
+    $suspended->title = 'A new title';
+
+    expect(fn () => $suspended->save())->toThrow(RowNotDecrypted::class)
+        ->and(storedNoteColumn($note->id, 'body'))->toBe($before);
+});
+
+it('decrypts a suspended json field on demand', function () {
+    $note = createNote();
+
+    $suspended = CipherSweetDecryption::suspend(fn () => Note::find($note->id));
+
+    expect($suspended->decryptNow()->title)->toBe('Title')
+        ->and($suspended->meta)->toBe(['secret' => 'shh']);
+});
+
+it('reports that it cannot decrypt a row whose encrypted columns were not all selected', function () {
+    $note = createNote();
+
+    $partial = CipherSweetDecryption::suspend(fn () => Note::select('id', 'title')->find($note->id));
+
+    expect(fn () => $partial->decryptNow())->toThrow(EmptyFieldException::class);
+});
+
+function createNote(): Note
+{
+    return Note::create(['title' => 'Title', 'body' => 'Body', 'meta' => ['secret' => 'shh']]);
+}
+
+function storedNoteColumn(int $id, string $column): ?string
+{
+    return DB::table('notes')->where('id', $id)->value($column);
+}
+
+function rotateCipherSweetKey(): void
+{
+    config()->set('ciphersweet.providers.string.key', Hex::encode(random_bytes(32)));
+
+    app()->forgetInstance(CipherSweet::class);
+
+    User::$cipherSweetEncryptedRow = null;
+}
 
 function storedEmail(int $id): string
 {
