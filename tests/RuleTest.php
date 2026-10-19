@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
+use Spatie\LaravelCipherSweet\Rules\EncryptedExistsRule;
 use Spatie\LaravelCipherSweet\Rules\EncryptedUniqueRule;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\NormalUser;
 use Spatie\LaravelCipherSweet\Tests\TestClasses\User;
@@ -96,4 +97,66 @@ it('correctly uses the translated attribute name', function () {
 
     expect($validator->fails())->toBeTrue();
     expect($validator->errors()->first('email'))->toContain('The custom address has already been taken');
+});
+
+it('passes when encrypted value exists', function () {
+    User::create([
+        'name' => 'John Doe',
+        'password' => bcrypt('password'),
+        'email' => 'existing@example.com',
+    ]);
+
+    $rule = new EncryptedExistsRule(User::class, 'email_index');
+
+    $validator = Validator::make([
+        'email' => 'existing@example.com',
+    ], [
+        'email' => [$rule],
+    ]);
+
+    expect($validator->passes())->toBeTrue();
+});
+
+it('fails when encrypted value does not exist', function () {
+    $rule = new EncryptedExistsRule(User::class, 'email_index');
+
+    $validator = Validator::make([
+        'email' => 'missing@example.com',
+    ], [
+        'email' => [$rule],
+    ]);
+
+    expect($validator->fails())->toBeTrue();
+    expect($validator->errors()->first('email'))->toContain('The selected email is invalid');
+});
+
+it('throws exception in encrypted exists if model does not implement CipherSweetEncrypted', function () {
+    $rule = new EncryptedExistsRule(NormalUser::class, 'email_index');
+
+    Validator::make([
+        'email' => 'example@example.com',
+    ], [
+        'email' => [$rule],
+    ])->passes();
+})->throws(RuntimeException::class, "The model " . NormalUser::class . " must implement " . CipherSweetEncrypted::class);
+
+it('creates an encryptedExists rule via macro', function () {
+    $rule = Rule::encryptedExists(User::class, 'email');
+
+    expect($rule)->toBeInstanceOf(EncryptedExistsRule::class);
+});
+
+it('correctly uses the translated attribute name for encrypted exists', function () {
+    $rule = new EncryptedExistsRule(User::class, 'email_index');
+
+    $validator = Validator::make([
+        'email' => 'missing@example.com',
+    ], [
+        'email' => [$rule],
+    ], [], [
+        'email' => 'custom address',
+    ]);
+
+    expect($validator->fails())->toBeTrue();
+    expect($validator->errors()->first('email'))->toContain('The selected custom address is invalid');
 });

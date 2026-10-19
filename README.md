@@ -305,6 +305,38 @@ Rule::encryptedUnique(User::class, 'email_index')->ignoreModel($user)
 
 > 💡 Ensure the target model implements `Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted` and defines the appropriate blind index.
 
+## Encrypted Exists Validation Rule
+
+You can validate that an encrypted field exists in the database using `EncryptedExistsRule`.
+
+When working with encrypted fields and blind indexes, Laravel’s default `Rule::exists()` validation doesn't work out of the box. This package includes a custom rule to check for existence via blind indexes.
+
+### Usage
+
+You may use the rule directly:
+
+```php
+use Spatie\LaravelCipherSweet\Rules\EncryptedExistsRule;
+
+$request->validate([
+    'email' => [new EncryptedExistsRule(User::class, 'email_index')],
+]);
+```
+
+Or, for a more expressive approach, use the macro added to Laravel’s `Rule` class:
+
+```php
+use Illuminate\Validation\Rule;
+
+$request->validate([
+    'email' => [Rule::encryptedExists(User::class, 'email_index')],
+]);
+```
+
+> The third parameter of the rule is the database column name. If not provided, it will default to the validation attribute name (i.e., `email` in the example above).
+
+> 💡 Ensure the target model implements `Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted` and defines the appropriate blind index.
+
 
 ## Implementing a custom backend
 
