@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-ciphersweet` will be documented in this file.
 
+## 1.10.0 - 2026-10-19
+
+### What's Changed
+
+- Add EncryptedExistsRule and Rule::encryptedExists() to validate encrypted values through blind indexes by @ur-oot in #105.
+- Use an efficient existence query and cover explicit column names, nested attributes, wildcard validation, missing values, and translated errors.
+- Modernize testing for PHP 8.3–8.5 and Laravel 12–13, with Pest 5 on compatible environments and Pest 4 for PHP 8.3 / Laravel 12.
+- Run read-only formatting and PHPStan checks on pull requests.
+
+### Requirements
+
+PHP 8.3+ and Laravel 12 or 13 are now required. Support for PHP 8.1–8.2 and Laravel 10–11 has been removed. There are no application API breaking changes.
+
+**Full Changelog**: https://github.com/spatie/laravel-ciphersweet/compare/1.9.0...1.10.0
+
 ## 1.9.0 - 2026-09-01
 
 ### What's Changed
