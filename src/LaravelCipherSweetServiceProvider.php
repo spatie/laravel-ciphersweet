@@ -14,6 +14,7 @@ use ParagonIE\CipherSweet\KeyProvider\RandomProvider;
 use ParagonIE\CipherSweet\KeyProvider\StringProvider;
 use Spatie\LaravelCipherSweet\Commands\EncryptCommand;
 use Spatie\LaravelCipherSweet\Commands\GenerateKeyCommand;
+use Spatie\LaravelCipherSweet\Rules\EncryptedExistsRule;
 use Spatie\LaravelCipherSweet\Rules\EncryptedUniqueRule;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -39,6 +40,10 @@ class LaravelCipherSweetServiceProvider extends PackageServiceProvider
 
         Rule::macro('encryptedUnique', function (string $model, string $indexName, ?string $column = null) {
             return new EncryptedUniqueRule($model, $indexName, $column);
+        });
+
+        Rule::macro('encryptedExists', function (string $model, string $indexName, ?string $column = null) {
+            return new EncryptedExistsRule($model, $indexName, $column);
         });
     }
 
