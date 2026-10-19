@@ -118,6 +118,12 @@ it('passes when encrypted value exists', function () {
 });
 
 it('fails when encrypted value does not exist', function () {
+    User::create([
+        'name' => 'John Doe',
+        'password' => bcrypt('password'),
+        'email' => 'existing@example.com',
+    ]);
+
     $rule = new EncryptedExistsRule(User::class, 'email_index');
 
     $validator = Validator::make([
@@ -141,10 +147,33 @@ it('throws exception in encrypted exists if model does not implement CipherSweet
 })->throws(RuntimeException::class, "The model " . NormalUser::class . " must implement " . CipherSweetEncrypted::class);
 
 it('creates an encryptedExists rule via macro', function () {
-    $rule = Rule::encryptedExists(User::class, 'email');
+    $rule = Rule::encryptedExists(User::class, 'email_index');
 
     expect($rule)->toBeInstanceOf(EncryptedExistsRule::class);
 });
+
+it('validates each nested encrypted value using an explicit column', function (string $secondEmail, bool $passes) {
+    User::create([
+        'name' => 'John Doe',
+        'password' => bcrypt('password'),
+        'email' => 'existing@example.com',
+    ]);
+
+    $validator = Validator::make([
+        'contacts' => [
+            ['email' => 'existing@example.com'],
+            ['email' => $secondEmail],
+        ],
+    ], [
+        'contacts.*.email' => [Rule::encryptedExists(User::class, 'email_index', 'email')],
+    ]);
+
+    expect($validator->passes())->toBe($passes);
+    expect($validator->errors()->keys())->toBe($passes ? [] : ['contacts.1.email']);
+})->with([
+    'all values exist' => ['existing@example.com', true],
+    'one value is missing' => ['missing@example.com', false],
+]);
 
 it('correctly uses the translated attribute name for encrypted exists', function () {
     $rule = new EncryptedExistsRule(User::class, 'email_index');

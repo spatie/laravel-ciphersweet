@@ -12,23 +12,21 @@ class EncryptedExistsRule implements ValidationRule
     public function __construct(
         protected string $model,
         protected string $indexName,
-        protected ?string $column = null
+        protected ?string $column = null,
     ) {
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $this->column ??= $attribute;
-
         $this->checkModelHasEncryptedColumn();
 
-        $count = $this->model::whereBlind(
-            $this->column,
+        $exists = $this->model::whereBlind(
+            $this->column ?? $attribute,
             $this->indexName,
             $value
-        )->count();
+        )->exists();
 
-        if ($count === 0) {
+        if (! $exists) {
             $fail('validation.exists')->translate();
         }
     }

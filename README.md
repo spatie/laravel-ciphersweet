@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
 [![GitHub Tests Action Status](https://github.com/spatie/laravel-ciphersweet/actions/workflows/run-tests.yml/badge.svg)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://github.com/spatie/laravel-ciphersweet/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Code Style Action Status](https://github.com/spatie/laravel-ciphersweet/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/spatie/laravel-ciphersweet/actions?query=workflow%3A"Check+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-ciphersweet.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-ciphersweet)
 
 In your project, you might store sensitive personal data in your database. Should an unauthorised person get access to your DB, all sensitive can be read which is obviously not good.
@@ -22,6 +22,8 @@ We invest a lot of resources into creating [best in class open source packages](
 We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
+
+This package requires PHP 8.3 or higher and Laravel 12 or higher.
 
 You can install the package via composer:
 
@@ -334,6 +336,14 @@ $request->validate([
 ```
 
 > The third parameter of the rule is the database column name. If not provided, it will default to the validation attribute name (i.e., `email` in the example above).
+
+For nested attributes or arrays, specify the encrypted column explicitly:
+
+```php
+$request->validate([
+    'contacts.*.email' => [Rule::encryptedExists(User::class, 'email_index', 'email')],
+]);
+```
 
 > 💡 Ensure the target model implements `Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted` and defines the appropriate blind index.
 
